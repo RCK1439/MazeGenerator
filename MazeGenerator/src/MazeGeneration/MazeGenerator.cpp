@@ -67,7 +67,7 @@ namespace maze
 				break;
 			}
 
-			invalids |= ((!validSelection) & 0x1) << choice;
+			invalids |= (!validSelection & 0x1) << choice; 
 
 		} while (!validSelection && invalids != ALL_INVALID);
 
@@ -131,7 +131,7 @@ namespace maze
 	}
 
 //	==================================================
-//	Privvate Functions
+//	Private Functions
 //	==================================================
 
 	void MazeGenerator::ConstructCellGrid()
@@ -169,7 +169,6 @@ namespace maze
 	void MazeGenerator::OnResize(byte cellSize)
 	{
 		m_CellSize = cellSize;
-
 		ConstructCellGrid();
 	}
 }
