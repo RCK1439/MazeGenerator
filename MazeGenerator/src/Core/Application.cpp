@@ -1,3 +1,7 @@
+
+// Ruan C. Keet (2022)
+// Application.cpp
+
 #include "Application.h"
 #include "Log.h"
 #include "Types.h"

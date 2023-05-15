@@ -1,3 +1,7 @@
+
+// Ruan C. Keet (2022)
+// Types.h
+
 #pragma once
 
 namespace maze

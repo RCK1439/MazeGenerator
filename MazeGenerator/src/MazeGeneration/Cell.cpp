@@ -1,3 +1,7 @@
+
+// Ruan C. Keet (2022)
+// Cell.cpp
+
 #include "Cell.h"
 
 #include "Renderer/Renderer.h"

@@ -1,3 +1,7 @@
+
+// Ruan C. Keet (2022)
+// Renderer.cpp
+
 #include "Renderer.h"
 
 #include <raylib.h>
@@ -6,9 +10,10 @@
 
 namespace maze
 {
+	// Memory to be used by the renderer.
 	struct RendererData
 	{
-		Texture2D Texture;
+		Texture2D SpriteSheet;
 		uint32 TileSize;
 		Rectangle Tiles[NUM_TILES];
 	};
@@ -17,10 +22,10 @@ namespace maze
 
 	void Renderer::Init()
 	{
-		s_Data.Texture = LoadTexture("res/tiles.png");
+		s_Data.SpriteSheet = LoadTexture("res/tiles.png");
 
-		const uint32 width  = s_Data.Texture.width;
-		const uint32 height = s_Data.Texture.height;
+		const uint32 width  = s_Data.SpriteSheet.width;
+		const uint32 height = s_Data.SpriteSheet.height;
 		s_Data.TileSize = height;
 
 		for (uint32 i = 0; i < NUM_TILES; ++i)
@@ -37,7 +42,7 @@ namespace maze
 
 	void Renderer::Shutdown()
 	{
-		UnloadTexture(s_Data.Texture);
+		UnloadTexture(s_Data.SpriteSheet);
 	}
 
 	void Renderer::Begin()
@@ -62,7 +67,7 @@ namespace maze
 			s_Data.TileSize * scale
 		};
 
-		DrawTexturePro(s_Data.Texture, s_Data.Tiles[tileID & 0xF], dest, { 0.0f, 0.0f }, 0.0f, WHITE);
+		DrawTexturePro(s_Data.SpriteSheet, s_Data.Tiles[tileID & 0xF], dest, { 0.0f, 0.0f }, 0.0f, WHITE);
 	}
 
 	void Renderer::DrawPerformanceMetrics()

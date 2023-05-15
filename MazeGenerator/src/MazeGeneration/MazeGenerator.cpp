@@ -1,3 +1,7 @@
+
+// Ruan C. Keet (2022)
+// MazeGenerator.cpp
+
 #include "MazeGenerator.h"
 
 #include "Core/Log.h"
@@ -95,19 +99,19 @@ namespace maze
 		// Open border between current cell and neighbouring cell.
 		switch (choice)
 		{
-		case 0:
+		case 0: // West
 			m_Cells[m_CurrentY][m_CurrentX].CellState |= Cell::WEST_BIT;
 			m_Cells[nY][nX].CellState |= Cell::EAST_BIT;
 			break;
-		case 1:
+		case 1: // South
 			m_Cells[m_CurrentY][m_CurrentX].CellState |= Cell::SOUTH_BIT;
 			m_Cells[nY][nX].CellState |= Cell::NORTH_BIT;
 			break;
-		case 2:
+		case 2: // East
 			m_Cells[m_CurrentY][m_CurrentX].CellState |= Cell::EAST_BIT;
 			m_Cells[nY][nX].CellState |= Cell::WEST_BIT;
 			break;
-		case 3:
+		case 3: // North
 			m_Cells[m_CurrentY][m_CurrentX].CellState |= Cell::NORTH_BIT;
 			m_Cells[nY][nX].CellState |= Cell::SOUTH_BIT;
 			break;
@@ -128,6 +132,12 @@ namespace maze
 		for (uint16 y = 0; y < m_Height; y++)
 			for (uint16 x = 0; x < m_Width; x++)
 				m_Cells[y][x].OnRender(m_CellSize);
+	}
+
+	void MazeGenerator::OnResize(byte cellSize)
+	{
+		m_CellSize = cellSize;
+		ConstructCellGrid();
 	}
 
 //	==================================================
@@ -164,11 +174,5 @@ namespace maze
 				IsValidNeighbour(x + 1, y) ||
 				IsValidNeighbour(x, y + 1) ||
 				IsValidNeighbour(x + 1, y);
-	}
-
-	void MazeGenerator::OnResize(byte cellSize)
-	{
-		m_CellSize = cellSize;
-		ConstructCellGrid();
 	}
 }

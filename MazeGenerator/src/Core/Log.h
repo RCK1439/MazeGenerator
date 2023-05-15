@@ -1,3 +1,7 @@
+
+// Ruan C. Keet (2022)
+// Log.h
+
 #pragma once
 
 #ifdef MG_DEBUG
