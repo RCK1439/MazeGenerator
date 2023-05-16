@@ -30,53 +30,20 @@ namespace maze
 
 	void MazeGenerator::OnUpdate()
 	{
-		if (m_NumVisited == m_Width * m_Height)
+		LOG(TextFormat("Current: [%d, %d]", m_CurrentX, m_CurrentY));
+		Cell& current = m_Cells[m_CurrentY][m_CurrentX];
+
+		if (!current.IsVisited())
+		{
+			current.Visit();
+			m_NumVisited++;
+		}
+
+		if (IsFinish())
 			return;
 
-		LOG(TextFormat("Current: [%d, %d]", m_CurrentX, m_CurrentY));
-
-		// Mark current cell as visited
-		m_Cells[m_CurrentY][m_CurrentX].Visit();
-
-		// Randomly choose a valid neighbouring cell.
-		bool validSelection = false;
-		byte choice;
-		byte invalids = 0;
-		uint16 nX;
-		uint16 nY;
-		do
-		{
-			choice = GetRandomValue(0, 3);
-
-			nX = m_CurrentX;
-			nY = m_CurrentY;
-
-			switch (choice)
-			{
-			case 0:	// West
-				validSelection = IsValidNeighbour(nX - 1, nY);
-				if (validSelection) nX -= 1;
-				break;
-			case 1:	// South
-				validSelection = IsValidNeighbour(nX, nY + 1);
-				if (validSelection) nY += 1;
-				break;
-			case 2:	// East
-				validSelection = IsValidNeighbour(nX + 1, nY);
-				if (validSelection) nX += 1;
-				break;
-			case 3:	// North
-				validSelection = IsValidNeighbour(nX, nY - 1);
-				if (validSelection) nY -= 1;
-				break;
-			}
-
-			invalids |= (!validSelection & 0x1) << choice; 
-
-		} while (!validSelection && invalids != ALL_INVALID);
-
-		// Pop cells off of the stack if the algorithm gets stuck.
-		if (invalids == ALL_INVALID)
+		std::vector<Cell*> validNeighbours = GetValidNeighbours(m_CurrentX, m_CurrentY);
+		if (validNeighbours.empty())
 		{
 			while (!m_Path.empty())
 			{
@@ -91,40 +58,20 @@ namespace maze
 					m_CurrentY = sY;
 					return;
 				}
-				
+
 				m_Path.pop();
 			}
 		}
 
-		// Open border between current cell and neighbouring cell.
-		switch (choice)
-		{
-		case 0: // West
-			m_Cells[m_CurrentY][m_CurrentX].CellState |= Cell::WEST_BIT;
-			m_Cells[nY][nX].CellState |= Cell::EAST_BIT;
-			break;
-		case 1: // South
-			m_Cells[m_CurrentY][m_CurrentX].CellState |= Cell::SOUTH_BIT;
-			m_Cells[nY][nX].CellState |= Cell::NORTH_BIT;
-			break;
-		case 2: // East
-			m_Cells[m_CurrentY][m_CurrentX].CellState |= Cell::EAST_BIT;
-			m_Cells[nY][nX].CellState |= Cell::WEST_BIT;
-			break;
-		case 3: // North
-			m_Cells[m_CurrentY][m_CurrentX].CellState |= Cell::NORTH_BIT;
-			m_Cells[nY][nX].CellState |= Cell::SOUTH_BIT;
-			break;
-		}
+		const int upperBound = static_cast<int>(validNeighbours.size()) - 1;
+		const size_t index   = static_cast<size_t>(GetRandomValue(0, upperBound));
+		Cell& neighbour = *validNeighbours[index];
 
-		// Push current cell to the stack.
-		m_Path.push(m_Cells[m_CurrentY][m_CurrentX]);
+		OpenWallBetween(current, neighbour);
+		m_Path.push(current);
 
-		// Make neighbouring cell the current cell.
-		m_CurrentX = nX;
-		m_CurrentY = nY;
-
-		m_NumVisited++;
+		m_CurrentX = neighbour.GetX();
+		m_CurrentY = neighbour.GetY();
 	}
 
 	void MazeGenerator::OnRender() const
@@ -174,5 +121,40 @@ namespace maze
 				IsValidNeighbour(x + 1, y) ||
 				IsValidNeighbour(x, y + 1) ||
 				IsValidNeighbour(x + 1, y);
+	}
+
+	std::vector<Cell*> MazeGenerator::GetValidNeighbours(uint16 x, uint16 y)
+	{
+		std::vector<Cell*> neighbours;
+
+		if (IsValidNeighbour(x, y - 1)) neighbours.push_back(&m_Cells[y - 1][x]);
+		if (IsValidNeighbour(x + 1, y)) neighbours.push_back(&m_Cells[y][x + 1]);
+		if (IsValidNeighbour(x, y + 1)) neighbours.push_back(&m_Cells[y + 1][x]);
+		if (IsValidNeighbour(x - 1, y)) neighbours.push_back(&m_Cells[y][x - 1]);
+
+		return neighbours;
+	}
+
+	void MazeGenerator::OpenWallBetween(Cell& a, Cell& b)
+	{
+		const int ax = static_cast<int>(a.GetX());
+		const int ay = static_cast<int>(a.GetY());
+		const int bx = static_cast<int>(b.GetX());
+		const int by = static_cast<int>(b.GetY());
+
+		const int xDir = bx - ax;
+		const int yDir = by - ay;
+
+		if (xDir != 0)
+		{
+			a.CellState |= (xDir < 0 ? Cell::WEST_BIT : Cell::EAST_BIT);
+			b.CellState |= (xDir < 0 ? Cell::EAST_BIT : Cell::WEST_BIT);
+		}
+
+		if (yDir != 0)
+		{
+			a.CellState |= (yDir < 0 ? Cell::NORTH_BIT : Cell::SOUTH_BIT);
+			b.CellState |= (yDir < 0 ? Cell::SOUTH_BIT : Cell::NORTH_BIT);
+		}
 	}
 }
