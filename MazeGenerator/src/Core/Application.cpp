@@ -67,18 +67,18 @@ namespace maze
 
 	void Application::InitGUI()
 	{
-		GuiSetStyle(BUTTON, BASE_COLOR_NORMAL, 0x222222FF);
+		GuiSetStyle(BUTTON, BASE_COLOR_NORMAL,  0x222222FF);
 		GuiSetStyle(BUTTON, BASE_COLOR_FOCUSED, 0x333333FF);
 		GuiSetStyle(BUTTON, BASE_COLOR_PRESSED, 0x111111FF);
 
 		GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
 		GuiSetStyle(DEFAULT, TEXT_SPACING, 2);
 
-		GuiSetStyle(BUTTON, TEXT_COLOR_NORMAL, 0xFEFEFEFF);
+		GuiSetStyle(BUTTON, TEXT_COLOR_NORMAL,  0xFEFEFEFF);
 		GuiSetStyle(BUTTON, TEXT_COLOR_FOCUSED, 0xFFFFFFFF);
 		GuiSetStyle(BUTTON, TEXT_COLOR_PRESSED, 0xEEEEEEFF);
 
-		GuiSetStyle(SLIDER, BASE_COLOR_NORMAL, 0x222222FF);
+		GuiSetStyle(SLIDER, BASE_COLOR_NORMAL,  0x222222FF);
 		GuiSetStyle(SLIDER, BASE_COLOR_FOCUSED, 0x333333FF);
 		GuiSetStyle(SLIDER, BASE_COLOR_PRESSED, 0x111111FF);
 	}
@@ -88,13 +88,40 @@ namespace maze
 		if (IsKeyPressed(KEY_F3))
 			m_Debug = !m_Debug;
 
-		if (IsKeyPressed(KEY_H))
-			m_HideGui = !m_HideGui;
-
-		if (m_Start)
-		{
+		if (IsKeyPressed(KEY_ENTER))
 			m_Generating = true;
-			m_Start = false;
+
+		if (IsKeyPressed(KEY_R))
+		{
+			ResetMaze();
+			m_Generating = false;
+		}
+
+		if (IsKeyPressed(KEY_LEFT))
+		{
+			byte cellSize = m_Generator.GetCellSize();
+			cellSize <<= 1;
+
+			if (cellSize > 64)
+				cellSize = 64;
+
+			m_Generator.OnResize(cellSize);
+			ResetMaze();
+
+			m_Generating = false;
+		}
+		else if (IsKeyPressed(KEY_RIGHT))
+		{
+			byte cellSize = m_Generator.GetCellSize();
+			cellSize >>= 1;
+
+			if (cellSize < 8)
+				cellSize = 8;
+
+			m_Generator.OnResize(cellSize);
+			ResetMaze();
+
+			m_Generating = false;
 		}
 
 		// Generate maze.
@@ -118,50 +145,23 @@ namespace maze
 
 		OnGuiRender();
 		if (m_Debug)
+		{
 			Renderer::DrawPerformanceMetrics();
+			Renderer::RenderText(TextFormat("Maze size: %dx%d", m_Generator.GetWidth(), m_Generator.GetHeight()), 5, 45);
+			Renderer::RenderText(TextFormat("Cell size: %d", m_Generator.GetCellSize()), 5, 65);
+
+			const uint32 numVisited = m_Generator.GetNumVisited();
+			const uint16 total		= m_Generator.GetWidth() * m_Generator.GetHeight();
+			const float percentage  = m_Generator.GetPercentageFinish();
+			Renderer::RenderText(TextFormat("Num. visited: %d/%d [%.2f%%]", numVisited, total, percentage), 5, 85);
+		}
 
 		Renderer::End();
 	}
 
 	void Application::OnGuiRender()
 	{
-		if (m_HideGui)
-			return;
-
-		const float buttonWidth  = 200.0f;
-		const float buttonHeight = 50.0f;
-
-		const uint16 screenWidth  = GetScreenWidth();
-		const uint16 screenHeight = GetScreenHeight();
-
-		const byte initialCellSize = m_Generator.GetCellSize();
-
-		byte cellSize = (byte)GuiSlider({ 5.0f, screenHeight - buttonHeight - 5.0f, buttonWidth, buttonHeight }, nullptr, "64", (float)initialCellSize, 0.0f, 64.0f);
-
-		cellSize = (cellSize >> 4) << 4;	// Round to the nearest 4th.
-
-		if (cellSize == 0)
-			cellSize = 4;
-
-		if (cellSize != initialCellSize)
-		{
-			m_Reset		 = true;
-			m_Generating = false;
-
-			m_Generator.OnResize(cellSize);
-			ResetMaze();
-
-			return;
-		}
-
-		m_Reset = GuiButton({ 5.0f, screenHeight - 2.0f * buttonHeight - 8.0f, buttonWidth, buttonHeight }, "Reset");
-		m_Start = GuiButton({ 5.0f, screenHeight - 3.0f * buttonHeight - 11.0f, buttonWidth, buttonHeight }, "Start");
-
-		if (m_Reset)
-		{
-			ResetMaze();
-			m_Generating = false;
-		}
+		// TODO
 	}
 
 	void Application::ResetMaze()
