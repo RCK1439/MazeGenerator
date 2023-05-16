@@ -53,6 +53,12 @@ namespace maze
 		// @return The percentage of visited cells in total amount of cells.
 		inline constexpr float GetPercentageFinish() const { return (100.0f * m_NumVisited) / static_cast<float>(m_Width * m_Height); }
 
+		// Gets the number of cells already
+		// visited by the algorithm.
+		//
+		// @return The number of visited cells.
+		inline constexpr uint32 GetNumVisited() const { return m_NumVisited; }
+
 		// Sets the size of the cells.
 		//
 		// @param cellSize:	The size to give the cells.
