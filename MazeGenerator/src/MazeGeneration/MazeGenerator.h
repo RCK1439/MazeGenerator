@@ -8,7 +8,6 @@
 
 #include <stack>
 #include <vector>
-#include <memory>
 
 namespace maze
 {
