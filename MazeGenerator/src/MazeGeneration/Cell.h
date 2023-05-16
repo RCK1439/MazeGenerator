@@ -32,7 +32,7 @@ namespace maze
 		// Checks if the cell has been visited or not.
 		//
 		// @return true, if the cell has been visited.
-		inline bool IsVisited() const { return CellState & 0x10; }
+		inline constexpr bool IsVisited() const { return CellState & 0x10; }
 
 		// Visits the cell.
 		inline void Visit() { CellState |= 0x10; }
@@ -40,12 +40,12 @@ namespace maze
 		// Gets the x-coordinate of the cell.
 		//
 		// @return The x-coordinate.
-		inline uint16 GetX() const { return m_XCoord; }
+		inline constexpr uint16 GetX() const { return m_XCoord; }
 
 		// Gets the y-coordinate of the cell.
 		//
 		// @return The y-coordinate.
-		inline uint16 GetY() const { return m_YCoord; }
+		inline constexpr uint16 GetY() const { return m_YCoord; }
 
 		// Renders the cell to the window.
 		//
