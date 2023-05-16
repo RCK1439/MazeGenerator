@@ -47,12 +47,12 @@ namespace maze
 		// Checks if the generator is finished generating the maze.
 		//
 		// @return true, if the generator has finished generating.
-		inline bool IsFinish() const { return m_NumVisited == (m_Width * m_Height); }
+		inline constexpr bool IsFinish() const { return m_NumVisited == (m_Width * m_Height); }
 
 		// Gets the ratio of visited cells to total cells in percentage form.
 		//
 		// @return The percentage of visited cells in total amount of cells.
-		inline float GetPercentageFinish() const { return (100.0f * m_NumVisited) / static_cast<float>(m_Width * m_Height); }
+		inline constexpr float GetPercentageFinish() const { return (100.0f * m_NumVisited) / static_cast<float>(m_Width * m_Height); }
 
 		// Sets the size of the cells.
 		//
@@ -62,17 +62,17 @@ namespace maze
 		// Gets the size of the cells.
 		//
 		// @return The current size of the cells.
-		inline byte GetCellSize() const { return m_CellSize; }
+		inline constexpr byte GetCellSize() const { return m_CellSize; }
 
 		// Gets the width of the field.
 		//
 		// @return The width of the field.
-		inline uint16 GetWidth() const { return m_Width; }
+		inline constexpr uint16 GetWidth() const { return m_Width; }
 
 		// Gets the height of the field.
 		//
 		// @return The height of the field.
-		inline uint16 GetHeight() const { return m_Height; }
+		inline constexpr uint16 GetHeight() const { return m_Height; }
 		
 		// Logic to run when the field gets resized.
 		//
@@ -99,6 +99,23 @@ namespace maze
 		//
 		// @return true, if the given cell has a valid neighbour.
 		bool HasValidNeighbour(uint16 x, uint16 y);
+
+		// Gets a list of all the valid neighbours surrounding the
+		// cell at the given x- and y-indices.
+		//
+		// @param x:	The x-index of the cell.
+		// @param y:	The y-index of the cell.
+		//
+		// @return A list of all valid neighbours surrounding the cell.
+		std::vector<Cell*> GetValidNeighbours(uint16 x, uint16 y);
+
+		// Opens the wall that borders the two cells based on where
+		// the lie relative to eachother.
+		// It is assumed that the cells are valid neighbouring cells.
+		//
+		// @param a:	The first cell.
+		// @param b:	The second cell.
+		void OpenWallBetween(Cell& a, Cell& b);
 
 	private:
 		byte m_CellSize = 16;
