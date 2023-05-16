@@ -46,11 +46,7 @@ namespace maze
 		bool m_IsRunning = true;
 		bool m_Debug = false;
 
-		bool m_HideGui = false;
 		bool m_Generating = false;
-		bool m_Reset = false;
-		bool m_Start = false;
-
 		MazeGenerator m_Generator;
 	};
 }
