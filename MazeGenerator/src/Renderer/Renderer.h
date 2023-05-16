@@ -6,6 +6,9 @@
 
 #include "Core/Types.h"
 
+#include <raylib.h>
+#include <string_view>
+
 namespace maze
 {
 	// This class handles all drawing-related functionality of our
@@ -36,5 +39,13 @@ namespace maze
 		// Draws the performance metrics of the application in the
 		// top-left corner
 		static void DrawPerformanceMetrics();
+
+		// Draws text at the given position on the window.
+		//
+		// @param text:		The text to draw to the window.
+		// @param x:		The x-coordinate to draw the text at.
+		// @param y:		The y-coordinate to draw the text at.
+		// @param color:	The colour to draw the text in.
+		static void RenderText(std::string_view text, uint16 x, uint16 y, Color = WHITE);
 	};
 }

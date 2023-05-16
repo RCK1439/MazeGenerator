@@ -4,8 +4,6 @@
 
 #include "Renderer.h"
 
-#include <raylib.h>
-
 #define NUM_TILES 16
 
 namespace maze
@@ -77,5 +75,10 @@ namespace maze
 
 		DrawText(TextFormat("%d FPS", fps), 5, 5, 20, WHITE);
 		DrawText(TextFormat("%.2fms", ft), 5, 25, 20, WHITE);
+	}
+
+	void Renderer::RenderText(std::string_view text, uint16 x, uint16 y, Color color)
+	{
+		DrawText(text.data(), x, y, 20, color);
 	}
 }
