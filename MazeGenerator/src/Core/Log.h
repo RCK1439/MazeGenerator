@@ -6,7 +6,8 @@
 
 #ifdef MG_DEBUG
 #include <iostream>
-#define LOG(x) std::cout << "[DEBUG]: " << x << std::endl
+#include <format>
+#define LOG(...) std::cout << "[DEBUG]: " << std::format(__VA_ARGS__) << std::endl
 
 #elif MG_RELEASE
 #define LOG(x)
