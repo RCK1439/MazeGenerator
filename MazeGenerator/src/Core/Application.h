@@ -50,5 +50,6 @@ namespace maze
 		MazeGenerator m_Generator;
 
 		byte m_Speed = 1;
+		bool m_HideGUI = false;
 	};
 }
