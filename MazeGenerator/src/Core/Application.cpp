@@ -105,41 +105,8 @@ namespace maze
 		if (IsKeyPressed(KEY_F3))
 			m_Debug = !m_Debug;
 
-		if (IsKeyPressed(KEY_ENTER))
-			m_Generating = true;
-
-		if (IsKeyPressed(KEY_R))
-		{
-			ResetMaze();
-			m_Generating = false;
-		}
-
-		if (IsKeyPressed(KEY_LEFT))
-		{
-			byte cellSize = m_Generator.GetCellSize();
-			cellSize <<= 1;
-
-			if (cellSize > 64)
-				cellSize = 64;
-
-			m_Generator.OnResize(cellSize);
-			ResetMaze();
-
-			m_Generating = false;
-		}
-		else if (IsKeyPressed(KEY_RIGHT))
-		{
-			byte cellSize = m_Generator.GetCellSize();
-			cellSize >>= 1;
-
-			if (cellSize < 8)
-				cellSize = 8;
-
-			m_Generator.OnResize(cellSize);
-			ResetMaze();
-
-			m_Generating = false;
-		}
+		if (IsKeyPressed(KEY_H))
+			m_HideGUI = !m_HideGUI;
 
 		// Generate maze.
 		if (m_Generating)
@@ -181,6 +148,9 @@ namespace maze
 
 	void Application::OnGuiRender()
 	{
+		if (m_HideGUI)
+			return;
+
 		const float screenWidth  = static_cast<float>(GetScreenWidth());
 		const float screenHeight = static_cast<float>(GetScreenHeight());
 
