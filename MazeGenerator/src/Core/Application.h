@@ -48,5 +48,7 @@ namespace maze
 
 		bool m_Generating = false;
 		MazeGenerator m_Generator;
+
+		byte m_Speed = 1;
 	};
 }
