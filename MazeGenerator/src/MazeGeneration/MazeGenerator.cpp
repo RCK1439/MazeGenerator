@@ -8,8 +8,6 @@
 
 #include <raylib.h>
 
-#define ALL_INVALID 0xF
-
 namespace maze
 {
 
@@ -30,7 +28,7 @@ namespace maze
 
 	void MazeGenerator::OnUpdate()
 	{
-		LOG(TextFormat("Current: [%d, %d]", m_CurrentX, m_CurrentY));
+		LOG("Current: [{}, {}]", m_CurrentX, m_CurrentY);
 		Cell& current = m_Cells[m_CurrentY][m_CurrentX];
 
 		if (!current.IsVisited())
@@ -49,8 +47,8 @@ namespace maze
 			{
 				const Cell& cell = m_Path.top();
 
-				uint16 sX = cell.GetX();
-				uint16 sY = cell.GetY();
+				const uint16 sX = cell.GetX();
+				const uint16 sY = cell.GetY();
 
 				if (HasValidNeighbour(sX, sY))
 				{
