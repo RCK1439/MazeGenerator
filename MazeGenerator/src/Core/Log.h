@@ -10,6 +10,6 @@
 #define LOG(...) std::cout << "[DEBUG]: " << std::format(__VA_ARGS__) << std::endl
 
 #elif MG_RELEASE
-#define LOG(x)
+#define LOG(...)
 
 #endif
