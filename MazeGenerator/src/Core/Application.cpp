@@ -11,6 +11,7 @@
 #include <raylib.h>
 #define RAYGUI_IMPLEMENTATION
 #include <extras/raygui.h>
+#include <algorithm>
 
 namespace maze
 {
@@ -67,20 +68,36 @@ namespace maze
 
 	void Application::InitGUI()
 	{
-		GuiSetStyle(BUTTON, BASE_COLOR_NORMAL,  0x222222FF);
-		GuiSetStyle(BUTTON, BASE_COLOR_FOCUSED, 0x333333FF);
-		GuiSetStyle(BUTTON, BASE_COLOR_PRESSED, 0x111111FF);
+
+		constexpr int gray		= 0x222222FF;
+		constexpr int lightGray = 0x333333FF;
+		constexpr int darkGray  = 0x111111FF;
+
+		constexpr int blue      = 0xFEFEFEFF;
+		constexpr int lightBlue = 0xFFFFFFFF;
+		constexpr int darkBlue  = 0xEEEEEEFF;
+
+		GuiSetStyle(BUTTON, BASE_COLOR_NORMAL,  gray);
+		GuiSetStyle(BUTTON, BASE_COLOR_FOCUSED, lightGray);
+		GuiSetStyle(BUTTON, BASE_COLOR_PRESSED, darkGray);
 
 		GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
 		GuiSetStyle(DEFAULT, TEXT_SPACING, 2);
+		GuiSetStyle(DEFAULT, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
 
-		GuiSetStyle(BUTTON, TEXT_COLOR_NORMAL,  0xFEFEFEFF);
-		GuiSetStyle(BUTTON, TEXT_COLOR_FOCUSED, 0xFFFFFFFF);
-		GuiSetStyle(BUTTON, TEXT_COLOR_PRESSED, 0xEEEEEEFF);
+		GuiSetStyle(BUTTON, TEXT_COLOR_NORMAL,  blue);
+		GuiSetStyle(BUTTON, TEXT_COLOR_FOCUSED, lightBlue);
+		GuiSetStyle(BUTTON, TEXT_COLOR_PRESSED, darkBlue);
 
-		GuiSetStyle(SLIDER, BASE_COLOR_NORMAL,  0x222222FF);
-		GuiSetStyle(SLIDER, BASE_COLOR_FOCUSED, 0x333333FF);
-		GuiSetStyle(SLIDER, BASE_COLOR_PRESSED, 0x111111FF);
+		GuiSetStyle(SLIDER, BASE_COLOR_NORMAL,  gray);
+		GuiSetStyle(SLIDER, BASE_COLOR_FOCUSED, lightGray);
+		GuiSetStyle(SLIDER, BASE_COLOR_PRESSED, darkGray);
+
+		GuiSetStyle(DEFAULT, BACKGROUND_COLOR,	  gray);
+		GuiSetStyle(DEFAULT, BASE_COLOR_NORMAL,   darkGray);
+		GuiSetStyle(DEFAULT, BORDER_COLOR_NORMAL, lightBlue);
+
+		GuiFade(0.7f);
 	}
 
 	bool Application::OnUpdate(const float dt)
@@ -127,8 +144,11 @@ namespace maze
 		// Generate maze.
 		if (m_Generating)
 		{
-			m_Generator.OnUpdate();
-			m_Generating = !m_Generator.IsFinish();
+			for (byte i = 0; i < m_Speed; ++i)
+			{
+				m_Generator.OnUpdate();
+				m_Generating = !m_Generator.IsFinish();
+			}
 
 			const float percentage = m_Generator.GetPercentageFinish();
 			SetWindowTitle(TextFormat("Maze Generator by Keet - %.02f%%", percentage));
@@ -161,6 +181,113 @@ namespace maze
 
 	void Application::OnGuiRender()
 	{
+		const float screenWidth  = static_cast<float>(GetScreenWidth());
+		const float screenHeight = static_cast<float>(GetScreenHeight());
+
+		// Play section.
+		{
+			constexpr float panelWidth = 515.0f;
+			constexpr float panelHeight = 90.0f;
+			const Rectangle panel =
+			{
+				0.0f,
+				screenHeight - panelHeight,
+				panelWidth,
+				panelHeight
+			};
+			GuiPanel(panel, "Play");
+
+			constexpr float buttonWidth = 250.0f;
+			constexpr float buttonHeight = 50.0f;
+			if (GuiButton({ 5.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, "Start"))
+				m_Generating = true;
+
+			if (GuiButton({ buttonWidth + 10.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, "Reset"))
+			{
+				ResetMaze();
+				m_Generating = false;
+			}
+		}
+
+		// Size section.
+		{
+			byte cellSize = m_Generator.GetCellSize();
+
+			constexpr float panelWidth = 155.0f;
+			constexpr float panelHeight = 90.0f;
+			const Rectangle panel =
+			{
+				515.0f,
+				screenHeight - panelHeight,
+				panelWidth,
+				panelHeight
+			};
+			GuiPanel(panel, "Cell Size");
+
+			constexpr float buttonWidth  = 50.0f;
+			constexpr float buttonHeight = 50.0f;
+			if (GuiButton({ panel.x + 5.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, "<"))
+			{
+				cellSize >>= 1;
+
+				if (cellSize < 8)
+					cellSize = 8;
+
+				m_Generator.OnResize(cellSize);
+				ResetMaze();
+
+				m_Generating = false;
+			}
+
+			if (GuiButton({ panel.width - buttonWidth + 510.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, ">"))
+			{
+				cellSize <<= 1;
+
+				if (cellSize > 64)
+					cellSize = 64;
+
+				m_Generator.OnResize(cellSize);
+				ResetMaze();
+
+				m_Generating = false;
+			}
+
+			GuiDrawText(TextFormat("%d", cellSize), panel, TEXT_ALIGN_CENTER, { 255, 255, 255, 128 });
+		}
+
+		// Speed
+		{
+			byte cellSize = m_Generator.GetCellSize();
+
+			constexpr float panelWidth = 155.0f;
+			constexpr float panelHeight = 90.0f;
+			const Rectangle panel =
+			{
+				670.0f,
+				screenHeight - panelHeight,
+				panelWidth,
+				panelHeight
+			};
+			GuiPanel(panel, "Speed");
+
+			constexpr float buttonWidth = 50.0f;
+			constexpr float buttonHeight = 50.0f;
+			if (GuiButton({ panel.x + 5.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, "<"))
+			{
+				m_Speed >>= 1;
+			}
+
+			if (GuiButton({ panel.width - buttonWidth + 665.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, ">"))
+			{
+				m_Speed <<= 1;
+			}
+
+			m_Speed = std::clamp<byte>(m_Speed, 1, 32);
+
+			GuiDrawText(TextFormat("%dx", m_Speed), panel, TEXT_ALIGN_CENTER, { 255, 255, 255, 128 });
+		}
+
+		// Delay
 		// TODO
 	}
 
