@@ -192,7 +192,7 @@ namespace maze
 				panelWidth,
 				panelHeight
 			};
-			GuiPanel(panel, "Cell Size");
+			GuiPanel(panel, "Cell Size (px)");
 
 			constexpr float buttonWidth  = 50.0f;
 			constexpr float buttonHeight = 50.0f;
