@@ -68,7 +68,6 @@ namespace maze
 
 	void Application::InitGUI()
 	{
-
 		constexpr int gray		= 0x222222FF;
 		constexpr int lightGray = 0x333333FF;
 		constexpr int darkGray  = 0x111111FF;
