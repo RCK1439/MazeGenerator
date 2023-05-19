@@ -4,16 +4,18 @@
 
 #include "Renderer.h"
 
-#define NUM_TILES 16
+#include <array>
 
 namespace maze
 {
+	static constexpr const size_t NUM_TILES = 16;
+
 	// Memory to be used by the renderer.
 	struct RendererData
 	{
 		Texture2D SpriteSheet;
 		uint32 TileSize;
-		Rectangle Tiles[NUM_TILES];
+		std::array<Rectangle, NUM_TILES> Tiles;
 	};
 
 	static RendererData s_Data;
