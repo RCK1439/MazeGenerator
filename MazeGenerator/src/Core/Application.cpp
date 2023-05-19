@@ -256,9 +256,6 @@ namespace maze
 
 			GuiDrawText(TextFormat("%dx", m_Speed), panel, TEXT_ALIGN_CENTER, { 255, 255, 255, 128 });
 		}
-
-		// Delay
-		// TODO
 	}
 
 	void Application::ResetMaze()
