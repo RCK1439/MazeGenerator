@@ -19,7 +19,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 // Entry point to the program.
 //
-// @retun The exit status of the program.
+// @return The exit status of the program.
 int main()
 {
 	maze::Application app;
