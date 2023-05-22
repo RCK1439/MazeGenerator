@@ -3,6 +3,7 @@
 // Application.cpp
 
 #include "Application.h"
+#include "Constants.h"
 #include "Log.h"
 #include "Types.h"
 
@@ -197,10 +198,7 @@ namespace maze
 			constexpr float buttonHeight = 50.0f;
 			if (GuiButton({ panel.x + 5.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, "<"))
 			{
-				cellSize >>= 1;
-
-				if (cellSize < 8)
-					cellSize = 8;
+				cellSize = std::clamp<byte>(cellSize >> 1, MIN_CELL_SIZE, MAX_CELL_SIZE);
 
 				m_Generator.OnResize(cellSize);
 				ResetMaze();
@@ -210,10 +208,7 @@ namespace maze
 
 			if (GuiButton({ panel.width - buttonWidth + 510.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, ">"))
 			{
-				cellSize <<= 1;
-
-				if (cellSize > 64)
-					cellSize = 64;
+				cellSize = std::clamp<byte>(cellSize << 1, MIN_CELL_SIZE, MAX_CELL_SIZE);
 
 				m_Generator.OnResize(cellSize);
 				ResetMaze();
@@ -251,7 +246,7 @@ namespace maze
 				m_Speed <<= 1;
 			}
 
-			m_Speed = std::clamp<byte>(m_Speed, 1, 32);
+			m_Speed = std::clamp<byte>(m_Speed, MIN_GENERATION_SPEED, MAX_GENERATION_SPEED);
 
 			GuiDrawText(TextFormat("%dx", m_Speed), panel, TEXT_ALIGN_CENTER, { 255, 255, 255, 128 });
 		}
