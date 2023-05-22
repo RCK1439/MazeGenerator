@@ -17,7 +17,7 @@ namespace maze
 	typedef long long			int64;
 
 #if defined(__linux__)
-	typedef unsigned long long size_t;
+	typedef unsigned long long 	size_t;
 #endif
 
 
