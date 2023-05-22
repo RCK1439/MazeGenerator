@@ -31,11 +31,15 @@ debug: $(INT_DEBUG) $(TARGET_DEBUG)
 release: $(INT_RELEASE) $(TARGET_RELEASE)
 
 $(INT_DEBUG):
-	mkdir -p $(INT_DEBUG)
+	mkdir -p $(INT_DEBUG)/Core
+	mkdir -p $(INT_DEBUG)/MazeGeneration
+	mkdir -p $(INT_DEBUG)/Renderer
 	mkdir -p $(BIN_DEBUG)
 
 $(INT_RELEASE):
-	mkdir -p $(INT_RELEASE)
+	mkdir -p $(INT_RELEASE)/Core
+	mkdir -p $(INT_RELEASE)/MazeGeneration
+	mkdir -p $(INT_RELEASE)/Renderer
 	mkdir -p $(BIN_RELEASE)
 
 $(TARGET_DEBUG): $(INT_DEBUG) $(OBJECTS_DEBUG)
@@ -45,10 +49,10 @@ $(TARGET_RELEASE): $(INT_RELEASE) $(OBJECTS_RELEASE)
 	$(CXX) $(CXXFLAGS_RELEASE) -o $@ $(OBJECTS_RELEASE) $(LIBS)
 
 $(INT_DEBUG)/%.o: $(SRCDIR)/%.cpp
-	$(CXX) $(CXXFLAGS_DEBUG) -c -o $@ -I $(SRCDIR) $<
+	$(CXX) $(CXXFLAGS_DEBUG) -c -o $@ -I $(SRCDIR) -I MazeGenerator/vendor/raylib/include $<
 
 $(INT_RELEASE)/%.o: $(SRCDIR)/%.cpp
-	$(CXX) $(CXXFLAGS_RELEASE) -c -o $@ -I $(SRCDIR) $<
+	$(CXX) $(CXXFLAGS_RELEASE) -c -o $@ -I $(SRCDIR) -I MazeGenerator/vendor/raylib/include $<
 
 clean:
 	rm -f $(OBJECTS_DEBUG) $(OBJECTS_RELEASE) $(TARGET_DEBUG) $(TARGET_RELEASE)
