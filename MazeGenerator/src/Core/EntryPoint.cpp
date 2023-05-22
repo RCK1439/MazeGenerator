@@ -5,7 +5,7 @@
 #include "Application.h"
 
 #if defined(MG_RELEASE)
-#if defined(_WIN64)
+#if defined(WIN32) || defined(_WIN32) || defined(_WIN64)
 
 #include <Windows.h>
 
