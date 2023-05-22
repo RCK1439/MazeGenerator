@@ -6,9 +6,14 @@
 
 #if defined(MG_DEBUG)
 	#include <iostream>
-	#include <format>
+
+	#if defined(WIN32)
+		#include <format>
+		#define LOG(...) std::cout << "[DEBUG]: " << std::format(__VA_ARGS__) << std::endl
+	#else
+		#define LOG(...) std::cout << "[DEBUG]: Undefined" << std::endl
+	#endif
 	
-	#define LOG(...) std::cout << "[DEBUG]: " << std::format(__VA_ARGS__) << std::endl
 #elif defined(MG_RELEASE)
 	#define LOG(...)
 #endif
