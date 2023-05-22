@@ -15,4 +15,10 @@ namespace maze
 	typedef short				int16;
 	typedef int					int32;
 	typedef long long			int64;
+
+#if defined(__linux__)
+	typedef unsigned long long size_t;
+#endif
+
+
 }
