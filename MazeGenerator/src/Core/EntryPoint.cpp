@@ -6,7 +6,7 @@
 #include "Platform.h"
 
 #if defined(MG_RELEASE)
-#ifdef MG_PLATFORM_WINDOWS
+#if defined(MG_PLATFORM_WINDOWS)
 
 #include <Windows.h>
 
@@ -20,7 +20,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 }
 
 
-#elif MG_PLATFORM_LINUX
+#elif defined(MG_PLATFORM_LINUX)
 
 // Entry point to the program.
 //
