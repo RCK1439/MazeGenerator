@@ -19,7 +19,7 @@ namespace maze
 	typedef long long			int64;
 
 #ifdef MG_PLATFORM_LINUX
-	typedef std::size_t 		size_t;
+	typedef unsigned long long 	size_t;
 #endif
 
 }
