@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "Platform.h"
+
 namespace maze
 {
 	typedef unsigned char		byte;
@@ -16,9 +18,8 @@ namespace maze
 	typedef int					int32;
 	typedef long long			int64;
 
-#if defined(__linux__)
-	typedef unsigned long long 	size_t;
+#ifdef MG_PLATFORM_LINUX
+	typedef std::size_t 		size_t;
 #endif
-
 
 }
