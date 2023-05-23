@@ -3,9 +3,10 @@
 // EntryPoint.cpp
 
 #include "Application.h"
+#include "Platform.h"
 
 #if defined(MG_RELEASE)
-#if defined(WIN32) || defined(_WIN32) || defined(_WIN64)
+#ifdef MG_PLATFORM_WINDOWS
 
 #include <Windows.h>
 
@@ -19,7 +20,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 }
 
 
-#elif defined(__linux__)
+#elif MG_PLATFORM_LINUX
 
 // Entry point to the program.
 //
