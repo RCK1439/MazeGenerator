@@ -6,8 +6,8 @@
 	#elif defined(_WIN64)
 		#define MG_PLATFORM_WINDOWS
 	#endif
-#elif defined (__linux__)
+#elif defined(__linux__)
 	#define MG_PLATFORM_LINUX
-#elif defined (__APPLE__)
+#elif defined(__APPLE__)
 	#error "MacOS not supported"
 #endif
