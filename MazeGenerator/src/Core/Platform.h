@@ -1,10 +1,10 @@
 #pragma once
 
 #if defined(_WIN32)
-	#if defined(_WIN_32)
-		#error "x86 builds not supported"
-	#elif defined(_WIN64)
+	#if defined(_WIN64)
 		#define MG_PLATFORM_WINDOWS
+	#else
+		#error "x86 builds not supported"
 	#endif
 #elif defined(__linux__)
 	#define MG_PLATFORM_LINUX
