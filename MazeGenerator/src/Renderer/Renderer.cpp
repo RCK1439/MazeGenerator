@@ -8,13 +8,13 @@
 
 namespace maze
 {
-	static constexpr const size_t NUM_TILES = 16;
+	static constexpr size_t NUM_TILES = 16;
 
 	// Memory to be used by the renderer.
 	struct RendererData
 	{
 		Texture2D SpriteSheet;
-		uint32 TileSize;
+		u32 TileSize;
 		std::array<Rectangle, NUM_TILES> Tiles;
 	};
 
@@ -24,18 +24,18 @@ namespace maze
 	{
 		s_Data.SpriteSheet = LoadTexture("res/tiles.png");
 
-		const uint32 width  = s_Data.SpriteSheet.width;
-		const uint32 height = s_Data.SpriteSheet.height;
+		const u32 width  = s_Data.SpriteSheet.width;
+		const u32 height = s_Data.SpriteSheet.height;
 		s_Data.TileSize = height;
 
-		for (uint32 i = 0; i < NUM_TILES; ++i)
+		for (u32 i = 0; i < NUM_TILES; ++i)
 		{
 			s_Data.Tiles[i] =
 			{
-				static_cast<float>(i * s_Data.TileSize),
+				(f32)(i * s_Data.TileSize),
 				0.0f,
-				static_cast<float>(s_Data.TileSize),
-				static_cast<float>(s_Data.TileSize)
+				(f32)(s_Data.TileSize),
+				(f32)(s_Data.TileSize)
 			};
 		}
 	}
@@ -56,13 +56,13 @@ namespace maze
 		EndDrawing();
 	}
 
-	void Renderer::DrawTile(byte tileID, uint16 x, uint16 y, uint16 cellSize)
+	void Renderer::DrawTile(u8 tileID, u16 x, u16 y, u16 cellSize)
 	{
-		const float scale = static_cast<float>(cellSize) / static_cast<float>(s_Data.TileSize);
+		const f32 scale = (f32)cellSize / (f32)s_Data.TileSize;
 		const Rectangle dest =
 		{
-			static_cast<float>(x),
-			static_cast<float>(y),
+			(f32)x,
+			(f32)y,
 			s_Data.TileSize * scale,
 			s_Data.TileSize * scale
 		};
@@ -72,14 +72,14 @@ namespace maze
 
 	void Renderer::DrawPerformanceMetrics()
 	{
-		const int fps  = GetFPS();
-		const float ft = GetFrameTime() * 1000.0f;
+		const s32 fps = GetFPS();
+		const f32 ft  = GetFrameTime() * 1000.0f;
 
 		DrawText(TextFormat("%d FPS", fps), 5, 5, 20, WHITE);
 		DrawText(TextFormat("%.2fms", ft), 5, 25, 20, WHITE);
 	}
 
-	void Renderer::RenderText(std::string_view text, uint16 x, uint16 y, Color color)
+	void Renderer::RenderText(std::string_view text, u16 x, u16 y, Color color)
 	{
 		DrawText(text.data(), x, y, 20, color);
 	}

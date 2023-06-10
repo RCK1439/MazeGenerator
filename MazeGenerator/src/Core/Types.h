@@ -8,15 +8,18 @@
 
 namespace maze
 {
-	typedef unsigned char		byte;
-	typedef unsigned short		uint16;
-	typedef unsigned int		uint32;
-	typedef unsigned long long	uint64;
+	typedef unsigned char		u8;
+	typedef unsigned short		u16;
+	typedef unsigned int		u32;
+	typedef unsigned long long	u64;
 
-	typedef char				int8;
-	typedef short				int16;
-	typedef int					int32;
-	typedef long long			int64;
+	typedef signed char			s8;
+	typedef signed short		s16;
+	typedef signed int			s32;
+	typedef signed long long	s64;
+
+	typedef float				f32;
+	typedef long double			f64;
 
 #ifdef MG_PLATFORM_LINUX
 	typedef unsigned long long 	size_t;

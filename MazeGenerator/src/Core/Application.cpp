@@ -26,7 +26,7 @@ namespace maze
 		SetConfigFlags(FLAG_VSYNC_HINT);
 
 		SetTraceLogLevel(LOG_NONE);
-		InitWindow(1536, 768, "Maze Generator by Keet");
+		InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Maze Generator by Keet");
 		{
 			Image icon = LoadImage("res/icon.png");
 			SetWindowIcon(icon);
@@ -52,7 +52,7 @@ namespace maze
 
 	void Application::Run()
 	{
-		float dt = 0.0f;
+		f32 dt = 0.0f;
 
 		while (m_IsRunning)
 		{
@@ -69,13 +69,13 @@ namespace maze
 
 	void Application::InitGUI()
 	{
-		constexpr int gray		= 0x222222FF;
-		constexpr int lightGray = 0x333333FF;
-		constexpr int darkGray  = 0x111111FF;
+		constexpr s32 gray		= 0x222222FF;
+		constexpr s32 lightGray = 0x333333FF;
+		constexpr s32 darkGray  = 0x111111FF;
 
-		constexpr int blue      = 0xFEFEFEFF;
-		constexpr int lightBlue = 0xFFFFFFFF;
-		constexpr int darkBlue  = 0xEEEEEEFF;
+		constexpr s32 blue      = 0xFEFEFEFF;
+		constexpr s32 lightBlue = 0xFFFFFFFF;
+		constexpr s32 darkBlue  = 0xEEEEEEFF;
 
 		GuiSetStyle(BUTTON, BASE_COLOR_NORMAL,  gray);
 		GuiSetStyle(BUTTON, BASE_COLOR_FOCUSED, lightGray);
@@ -100,7 +100,7 @@ namespace maze
 		GuiFade(0.7f);
 	}
 
-	bool Application::OnUpdate(const float dt)
+	bool Application::OnUpdate(const f32 dt)
 	{
 		if (IsKeyPressed(KEY_F3))
 			m_Debug = !m_Debug;
@@ -111,7 +111,7 @@ namespace maze
 		// Generate maze.
 		if (m_Generating)
 		{
-			for (byte i = 0; i < m_Speed; ++i)
+			for (u8 i = 0; i < m_Speed; i++)
 			{
 				m_Generator.OnUpdate();
 				m_Generating = !m_Generator.IsFinish();
@@ -137,9 +137,9 @@ namespace maze
 			Renderer::RenderText(TextFormat("Maze size: %dx%d", m_Generator.GetWidth(), m_Generator.GetHeight()), 5, 45);
 			Renderer::RenderText(TextFormat("Cell size: %d", m_Generator.GetCellSize()), 5, 65);
 
-			const uint32 numVisited = m_Generator.GetNumVisited();
-			const uint16 total		= m_Generator.GetWidth() * m_Generator.GetHeight();
-			const float percentage  = m_Generator.GetPercentageFinish();
+			const u32 numVisited = m_Generator.GetNumVisited();
+			const u16 total		 = m_Generator.GetWidth() * m_Generator.GetHeight();
+			const f32 percentage = m_Generator.GetPercentageFinish();
 			Renderer::RenderText(TextFormat("Num. visited: %d/%d [%.2f%%]", numVisited, total, percentage), 5, 85);
 		}
 
@@ -151,13 +151,13 @@ namespace maze
 		if (m_HideGUI)
 			return;
 
-		const float screenWidth  = static_cast<float>(GetScreenWidth());
-		const float screenHeight = static_cast<float>(GetScreenHeight());
+		constexpr f32 screenWidth  = (f32)SCREEN_WIDTH;
+		constexpr f32 screenHeight = (f32)SCREEN_HEIGHT;
 
 		// Play section.
 		{
-			constexpr float panelWidth = 515.0f;
-			constexpr float panelHeight = 90.0f;
+			constexpr f32 panelWidth = 515.0f;
+			constexpr f32 panelHeight = 90.0f;
 			const Rectangle panel =
 			{
 				0.0f,
@@ -167,8 +167,8 @@ namespace maze
 			};
 			GuiPanel(panel, "Play");
 
-			constexpr float buttonWidth = 250.0f;
-			constexpr float buttonHeight = 50.0f;
+			constexpr f32 buttonWidth = 250.0f;
+			constexpr f32 buttonHeight = 50.0f;
 			if (GuiButton({ 5.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, "Start"))
 				m_Generating = true;
 
@@ -181,10 +181,10 @@ namespace maze
 
 		// Size section.
 		{
-			byte cellSize = m_Generator.GetCellSize();
+			u8 cellSize = m_Generator.GetCellSize();
 
-			constexpr float panelWidth = 155.0f;
-			constexpr float panelHeight = 90.0f;
+			constexpr f32 panelWidth = 155.0f;
+			constexpr f32 panelHeight = 90.0f;
 			const Rectangle panel =
 			{
 				515.0f,
@@ -194,11 +194,11 @@ namespace maze
 			};
 			GuiPanel(panel, "Cell Size (px)");
 
-			constexpr float buttonWidth  = 50.0f;
-			constexpr float buttonHeight = 50.0f;
+			constexpr f32 buttonWidth  = 50.0f;
+			constexpr f32 buttonHeight = 50.0f;
 			if (GuiButton({ panel.x + 5.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, "<"))
 			{
-				cellSize = std::clamp<byte>(cellSize >> 1, MIN_CELL_SIZE, MAX_CELL_SIZE);
+				cellSize = std::clamp<u8>(cellSize >> 1, MIN_CELL_SIZE, MAX_CELL_SIZE);
 
 				m_Generator.OnResize(cellSize);
 				ResetMaze();
@@ -208,7 +208,7 @@ namespace maze
 
 			if (GuiButton({ panel.width - buttonWidth + 510.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, ">"))
 			{
-				cellSize = std::clamp<byte>(cellSize << 1, MIN_CELL_SIZE, MAX_CELL_SIZE);
+				cellSize = std::clamp<u8>(cellSize << 1, MIN_CELL_SIZE, MAX_CELL_SIZE);
 
 				m_Generator.OnResize(cellSize);
 				ResetMaze();
@@ -221,10 +221,10 @@ namespace maze
 
 		// Speed
 		{
-			byte cellSize = m_Generator.GetCellSize();
+			u8 cellSize = m_Generator.GetCellSize();
 
-			constexpr float panelWidth = 155.0f;
-			constexpr float panelHeight = 90.0f;
+			constexpr f32 panelWidth = 155.0f;
+			constexpr f32 panelHeight = 90.0f;
 			const Rectangle panel =
 			{
 				670.0f,
@@ -234,8 +234,8 @@ namespace maze
 			};
 			GuiPanel(panel, "Speed");
 
-			constexpr float buttonWidth = 50.0f;
-			constexpr float buttonHeight = 50.0f;
+			constexpr f32 buttonWidth = 50.0f;
+			constexpr f32 buttonHeight = 50.0f;
 			if (GuiButton({ panel.x + 5.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, "<"))
 			{
 				m_Speed >>= 1;
@@ -246,7 +246,7 @@ namespace maze
 				m_Speed <<= 1;
 			}
 
-			m_Speed = std::clamp<byte>(m_Speed, MIN_GENERATION_SPEED, MAX_GENERATION_SPEED);
+			m_Speed = std::clamp<u8>(m_Speed, MIN_GENERATION_SPEED, MAX_GENERATION_SPEED);
 
 			GuiDrawText(TextFormat("%dx", m_Speed), panel, TEXT_ALIGN_CENTER, { 255, 255, 255, 128 });
 		}
@@ -254,9 +254,9 @@ namespace maze
 
 	void Application::ResetMaze()
 	{
-		const byte cellSize = m_Generator.GetCellSize();
-		const uint16 width  = m_Generator.GetWidth();
-		const uint16 height = m_Generator.GetHeight();
+		const u8 cellSize = m_Generator.GetCellSize();
+		const u16 width   = m_Generator.GetWidth();
+		const u16 height  = m_Generator.GetHeight();
 
 		m_Generator = MazeGenerator::Create(cellSize, width, height);
 	}

@@ -8,8 +8,8 @@
 
 namespace maze
 {
-	void Cell::OnRender(byte cellSize) const
+	void Cell::OnRender(u8 cellSize) const
 	{
-		Renderer::DrawTile(CellState, m_XCoord * cellSize, m_YCoord * cellSize, cellSize);
+		Renderer::DrawTile(CellState, x * cellSize, y * cellSize, cellSize);
 	}
 }

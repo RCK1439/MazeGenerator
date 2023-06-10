@@ -31,7 +31,7 @@ namespace maze
 		// @param dt:	The time elapsed since the previous frame.
 		//
 		// @return false, if the program should terminate.
-		[[nodiscard]] bool OnUpdate(const float dt);
+		[[nodiscard]] bool OnUpdate(const f32 dt);
 
 		// Renders the entire program to the window.
 		void OnRender();
@@ -49,7 +49,7 @@ namespace maze
 		bool m_Generating = false;
 		MazeGenerator m_Generator;
 
-		byte m_Speed = 1;
+		u8 m_Speed = 1;
 		bool m_HideGUI = false;
 	};
 }

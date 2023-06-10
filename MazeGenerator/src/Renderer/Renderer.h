@@ -34,7 +34,7 @@ namespace maze
 		// @param x:		The x-coordinate of the cell.
 		// @param y:		The y-coordinate of the cell.
 		// @param cellSize:	The size of the cells in the field.
-		static void DrawTile(byte tileID, uint16 x, uint16 y, uint16 cellSize);
+		static void DrawTile(u8 tileID, u16 x, u16 y, u16 cellSize);
 
 		// Draws the performance metrics of the application in the
 		// top-left corner
@@ -46,6 +46,6 @@ namespace maze
 		// @param x:		The x-coordinate to draw the text at.
 		// @param y:		The y-coordinate to draw the text at.
 		// @param color:	The colour to draw the text in.
-		static void RenderText(std::string_view text, uint16 x, uint16 y, Color = WHITE);
+		static void RenderText(std::string_view text, u16 x, u16 y, Color = WHITE);
 	};
 }

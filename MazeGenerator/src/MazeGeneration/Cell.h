@@ -12,19 +12,19 @@ namespace maze
 	class Cell
 	{
 	public:
-		static constexpr const byte NORTH_BIT = 0x8;
-		static constexpr const byte EAST_BIT  = 0x4;
-		static constexpr const byte SOUTH_BIT = 0x2;
-		static constexpr const byte WEST_BIT  = 0x1;
+		static constexpr u8 NORTH_BIT = 0x8;
+		static constexpr u8 EAST_BIT  = 0x4;
+		static constexpr u8 SOUTH_BIT = 0x2;
+		static constexpr u8 WEST_BIT  = 0x1;
 
-		byte CellState = 0;
+		u8 CellState = 0;
 
 	public:
 		// Constructs a new cell with its coordinates.
 		//
 		// @param x:	The x-coordinate of the cell.
 		// @param y:	The y-coordinate of the cell.
-		explicit Cell(uint16 x, uint16 y) : m_XCoord(x), m_YCoord(y) {}
+		explicit Cell(u16 x, u16 y) : x(x), y(y) {}
 
 		// Destroys the cell.
 		~Cell() = default;
@@ -40,20 +40,19 @@ namespace maze
 		// Gets the x-coordinate of the cell.
 		//
 		// @return The x-coordinate.
-		inline constexpr uint16 GetX() const { return m_XCoord; }
+		inline constexpr u16 GetX() const { return x; }
 
 		// Gets the y-coordinate of the cell.
 		//
 		// @return The y-coordinate.
-		inline constexpr uint16 GetY() const { return m_YCoord; }
+		inline constexpr u16 GetY() const { return y; }
 
 		// Renders the cell to the window.
 		//
 		// @param cellSize:	The size of the cells in the maze.
-		void OnRender(byte cellSize) const;
+		void OnRender(u8 cellSize) const;
 
 	private:
-		uint16 m_XCoord;
-		uint16 m_YCoord;
+		u16 x, y;
 	};
 }

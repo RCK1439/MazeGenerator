@@ -22,7 +22,7 @@ namespace maze
 		// @param cellSize:	The size of the cells in the maze.
 		// @param width:	The width of the cell field.
 		// @param height:	The height of the cell field.
-		MazeGenerator(byte cellSize, uint16 width, uint16 height);
+		MazeGenerator(u8 cellSize, u16 width, u16 height);
 
 		// Destroys the MazeGenerator.
 		~MazeGenerator() = default;
@@ -51,38 +51,38 @@ namespace maze
 		// Gets the ratio of visited cells to total cells in percentage form.
 		//
 		// @return The percentage of visited cells in total amount of cells.
-		inline constexpr float GetPercentageFinish() const { return (100.0f * m_NumVisited) / static_cast<float>(m_Width * m_Height); }
+		inline constexpr float GetPercentageFinish() const { return (100.0f * m_NumVisited) / (f32)(m_Width * m_Height); }
 
 		// Gets the number of cells already
 		// visited by the algorithm.
 		//
 		// @return The number of visited cells.
-		inline constexpr uint32 GetNumVisited() const { return m_NumVisited; }
+		inline constexpr u32 GetNumVisited() const { return m_NumVisited; }
 
 		// Sets the size of the cells.
 		//
 		// @param cellSize:	The size to give the cells.
-		inline void SetCellSize(byte cellSize) { m_CellSize = cellSize; }
+		inline void SetCellSize(u8 cellSize) { m_CellSize = cellSize; }
 
 		// Gets the size of the cells.
 		//
 		// @return The current size of the cells.
-		inline constexpr byte GetCellSize() const { return m_CellSize; }
+		inline constexpr u8 GetCellSize() const { return m_CellSize; }
 
 		// Gets the width of the field.
 		//
 		// @return The width of the field.
-		inline constexpr uint16 GetWidth() const { return m_Width; }
+		inline constexpr u16 GetWidth() const { return m_Width; }
 
 		// Gets the height of the field.
 		//
 		// @return The height of the field.
-		inline constexpr uint16 GetHeight() const { return m_Height; }
+		inline constexpr u16 GetHeight() const { return m_Height; }
 		
 		// Logic to run when the field gets resized.
 		//
 		// @param cellSize:	The new size of the cells.
-		void OnResize(byte cellSize);
+		void OnResize(u8 cellSize);
 
 	private:
 		// Initializes the arrays holding all the cells.
@@ -95,7 +95,7 @@ namespace maze
 		//
 		// @return	true, if the indices aren't out of bounds and the cell
 		//			pointed to by the coordinates hasn't been visited yet.
-		bool IsValidNeighbour(uint16 x, uint16 y);
+		bool IsValidNeighbour(u16 x, u16 y);
 
 		// Checks if the cell at the given coordinates have a valid neighbour.
 		//
@@ -103,7 +103,7 @@ namespace maze
 		// @param y:	The y-index of the cell to check for.
 		//
 		// @return true, if the given cell has a valid neighbour.
-		bool HasValidNeighbour(uint16 x, uint16 y);
+		bool HasValidNeighbour(u16 x, u16 y);
 
 		// Gets a list of all the valid neighbours surrounding the
 		// cell at the given x- and y-indices.
@@ -112,7 +112,7 @@ namespace maze
 		// @param y:	The y-index of the cell.
 		//
 		// @return A list of all valid neighbours surrounding the cell.
-		std::vector<Cell*> GetValidNeighbours(uint16 x, uint16 y);
+		std::vector<Cell*> GetValidNeighbours(u16 x, u16 y);
 
 		// Opens the wall that borders the two cells based on where
 		// the lie relative to eachother.
@@ -123,13 +123,13 @@ namespace maze
 		void OpenWallBetween(Cell& a, Cell& b);
 
 	private:
-		byte m_CellSize = 16;
-		uint16 m_Width, m_Height;
-		uint16 m_CurrentX = 0, m_CurrentY = 0;
+		u8 m_CellSize = 16;
+		u16 m_Width, m_Height;
+		u16 m_CurrentX = 0, m_CurrentY = 0;
 
 		std::vector<std::vector<Cell>> m_Cells;
 		std::stack<Cell> m_Path;
 
-		uint32 m_NumVisited = 0;
+		u32 m_NumVisited = 0;
 	};
 }
