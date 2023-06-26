@@ -6,6 +6,7 @@
 
 #include "Cell.h"
 
+#include <array>
 #include <stack>
 #include <vector>
 
@@ -112,7 +113,7 @@ namespace maze
 		// @param y:	The y-index of the cell.
 		//
 		// @return A list of all valid neighbours surrounding the cell.
-		std::vector<Cell*> GetValidNeighbours(u16 x, u16 y);
+		std::array<Cell*, 4> GetValidNeighbours(u16 x, u16 y);
 
 		// Opens the wall that borders the two cells based on where
 		// the lie relative to eachother.

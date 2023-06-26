@@ -40,8 +40,8 @@ namespace maze
 		if (IsFinish())
 			return;
 
-		std::vector<Cell*> validNeighbours = GetValidNeighbours(m_CurrentX, m_CurrentY);
-		if (validNeighbours.empty())
+		std::array<Cell*, 4> validNeighbours = GetValidNeighbours(m_CurrentX, m_CurrentY);
+		if (!validNeighbours[0] && !validNeighbours[1] && !validNeighbours[2] && !validNeighbours[3])
 		{
 			while (!m_Path.empty())
 			{
@@ -61,15 +61,15 @@ namespace maze
 			}
 		}
 
-		const s32 upperBound = (s32)validNeighbours.size() - 1;
-		const size_t index   = (size_t)GetRandomValue(0, upperBound);
-		Cell& neighbour = *validNeighbours[index];
+		size_t index = GetRandomValue(0, 3);
+		while (!validNeighbours[index])
+			index = GetRandomValue(0, 3);
 
-		OpenWallBetween(current, neighbour);
+		OpenWallBetween(current, *validNeighbours[index]);
 		m_Path.push(current);
 
-		m_CurrentX = neighbour.GetX();
-		m_CurrentY = neighbour.GetY();
+		m_CurrentX = validNeighbours[index]->GetX();
+		m_CurrentY = validNeighbours[index]->GetY();
 	}
 
 	void MazeGenerator::OnRender() const
@@ -121,14 +121,14 @@ namespace maze
 				IsValidNeighbour(x + 1, y);
 	}
 
-	std::vector<Cell*> MazeGenerator::GetValidNeighbours(u16 x, u16 y)
+	std::array<Cell*, 4> MazeGenerator::GetValidNeighbours(u16 x, u16 y)
 	{
-		std::vector<Cell*> neighbours;
+		std::array<Cell*, 4> neighbours = { nullptr, nullptr, nullptr, nullptr };
 
-		if (IsValidNeighbour(x, y - 1)) neighbours.push_back(&m_Cells[y - 1][x]);
-		if (IsValidNeighbour(x + 1, y)) neighbours.push_back(&m_Cells[y][x + 1]);
-		if (IsValidNeighbour(x, y + 1)) neighbours.push_back(&m_Cells[y + 1][x]);
-		if (IsValidNeighbour(x - 1, y)) neighbours.push_back(&m_Cells[y][x - 1]);
+		if (IsValidNeighbour(x, y - 1)) neighbours[0] = &m_Cells[y - 1][x];
+		if (IsValidNeighbour(x + 1, y)) neighbours[1] = &m_Cells[y][x + 1];
+		if (IsValidNeighbour(x, y + 1)) neighbours[2] = &m_Cells[y + 1][x];
+		if (IsValidNeighbour(x - 1, y)) neighbours[3] = &m_Cells[y][x - 1];
 
 		return neighbours;
 	}
