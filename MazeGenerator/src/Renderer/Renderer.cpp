@@ -1,6 +1,7 @@
-
-// Ruan C. Keet (2022)
-// Renderer.cpp
+/*
+* Ruan C. Keet (2022)
+* Renderer.cpp
+*/
 
 #include "Renderer.h"
 
@@ -10,7 +11,9 @@ namespace maze
 {
 	static constexpr size_t NUM_TILES = 16;
 
-	// Memory to be used by the renderer.
+	/*
+	* \brief Data to be used by the renderer.
+	*/
 	struct RendererData
 	{
 		Texture2D SpriteSheet;
@@ -67,7 +70,7 @@ namespace maze
 			s_Data.TileSize * scale
 		};
 
-		DrawTexturePro(s_Data.SpriteSheet, s_Data.Tiles[tileID & 0xF], dest, { 0.0f, 0.0f }, 0.0f, WHITE);
+		DrawTexturePro(s_Data.SpriteSheet, s_Data.Tiles[tileID & 0x0F], dest, { 0.0f, 0.0f }, 0.0f, WHITE);
 	}
 
 	void Renderer::DrawPerformanceMetrics()

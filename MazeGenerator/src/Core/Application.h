@@ -1,6 +1,7 @@
-
-// Ruan C. Keet (2022)
-// Application.h
+/*
+* Ruan C. Keet (2022)
+* Application.h
+*/
 
 #pragma once
 
@@ -8,38 +9,55 @@
 
 namespace maze
 {
-	// This class defines the application and contains
-	// the main-loop.
+	/*
+	* \brief Defines the application and contains the main-loop.
+	*/
 	class Application
 	{
 	public:
-		// Initializes the window and constructs the application.
+		/*
+		* \brief Initializes the window and constructs the application.
+		*/
 		Application();
 
-		// Closes the window and destroys the application.
+		/*
+		* \brief Closes the window and destroys the application.
+		*/
 		~Application();
 
-		// Runs the main-loop of the program.
+		/*
+		* \brief Runs the main-loop of the application.
+		*/
 		void Run();
 
 	public:
-		// Initializes all the UI components of the application.
+		/*
+		* \brief Initializes all UI components of the application.
+		*/
 		void InitGUI();
 
-		// Called once per frame to update the logic of the application.
-		//
-		// @param dt:	The time elapsed since the previous frame.
-		//
-		// @return false, if the program should terminate.
+		/*
+		* \brief Called once per frame to update the logic of the application.
+		* 
+		* \param dt:	The time elapsed since the last frame.
+		* 
+		* \return true, if the application is still running.
+		*/
 		[[nodiscard]] bool OnUpdate(const f32 dt);
 
-		// Renders the entire program to the window.
+		/*
+		* \brief Called once per frame to render the application to the window.
+		*/
 		void OnRender();
 
-		// Renders all the UI components to the window.
+		/*
+		* \brief Renders the UI components of the application to the window.
+		*/
 		void OnGuiRender();
 
-		// Resets the maze generator.
+		/*
+		* \brief Resets the maze generator to its start-state.
+		*/
 		void ResetMaze();
 
 	private:

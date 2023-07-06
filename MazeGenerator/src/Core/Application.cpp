@@ -1,6 +1,7 @@
-
-// Ruan C. Keet (2022)
-// Application.cpp
+/*
+* Ruan C. Keet (2022)
+* Application.cpp
+*/
 
 #include "Application.h"
 #include "Constants.h"
@@ -17,21 +18,16 @@
 namespace maze
 {
 
-//	==================================================
-//	Public Functions
-//	==================================================
-
 	Application::Application()
 	{
 		SetConfigFlags(FLAG_VSYNC_HINT);
 
 		SetTraceLogLevel(LOG_NONE);
 		InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Maze Generator by Keet");
-		{
-			Image icon = LoadImage("res/icon.png");
-			SetWindowIcon(icon);
-			UnloadImage(icon);
-		}
+		
+		Image icon = LoadImage("res/icon.png");
+		SetWindowIcon(icon);
+		UnloadImage(icon);
 
 		InitGUI();
 		Renderer::Init();
@@ -62,10 +58,6 @@ namespace maze
 			dt = GetFrameTime();
 		}
 	}
-		
-//	==================================================
-//	Private Functions
-//	==================================================
 
 	void Application::InitGUI()
 	{
@@ -108,7 +100,6 @@ namespace maze
 		if (IsKeyPressed(KEY_H))
 			m_HideGUI = !m_HideGUI;
 
-		// Generate maze.
 		if (m_Generating)
 		{
 			for (u8 i = 0; i < m_Speed; i++)

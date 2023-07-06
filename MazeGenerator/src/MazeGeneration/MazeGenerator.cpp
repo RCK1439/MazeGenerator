@@ -1,6 +1,10 @@
+/*
+* Ruan C. Keet (2022)
+* MazeGenerator.cpp
+*/
 
-// Ruan C. Keet (2022)
-// MazeGenerator.cpp
+#pragma warning(push)
+#pragma warning(disable: 28020)
 
 #include "MazeGenerator.h"
 
@@ -10,10 +14,6 @@
 
 namespace maze
 {
-
-//	==================================================
-//	Public Functions
-//	==================================================
 
 	MazeGenerator::MazeGenerator()
 	{
@@ -47,8 +47,8 @@ namespace maze
 			{
 				const Cell& cell = m_Path.top();
 
-				const u16 sX = cell.GetX();
-				const u16 sY = cell.GetY();
+				const u16 sX = cell.x;
+				const u16 sY = cell.y;
 
 				if (HasValidNeighbour(sX, sY))
 				{
@@ -61,15 +61,17 @@ namespace maze
 			}
 		}
 
-		size_t index = GetRandomValue(0, 3);
-		while (!validNeighbours[index])
-			index = GetRandomValue(0, 3);
+		size_t index;
+		do
+		{
+			index = (size_t)GetRandomValue(0, 3);
+		} while (!validNeighbours[index]);
 
 		OpenWallBetween(current, *validNeighbours[index]);
 		m_Path.push(current);
 
-		m_CurrentX = validNeighbours[index]->GetX();
-		m_CurrentY = validNeighbours[index]->GetY();
+		m_CurrentX = validNeighbours[index]->x;
+		m_CurrentY = validNeighbours[index]->y;
 	}
 
 	void MazeGenerator::OnRender() const
@@ -84,10 +86,6 @@ namespace maze
 		m_CellSize = cellSize;
 		ConstructCellGrid();
 	}
-
-//	==================================================
-//	Private Functions
-//	==================================================
 
 	void MazeGenerator::ConstructCellGrid()
 	{
@@ -115,10 +113,10 @@ namespace maze
 
 	bool MazeGenerator::HasValidNeighbour(u16 x, u16 y)
 	{
-		return  IsValidNeighbour(x, y - 1) ||
-				IsValidNeighbour(x + 1, y) ||
-				IsValidNeighbour(x, y + 1) ||
-				IsValidNeighbour(x + 1, y);
+		return IsValidNeighbour(x, y - 1) ||
+			   IsValidNeighbour(x + 1, y) ||
+			   IsValidNeighbour(x, y + 1) ||
+			   IsValidNeighbour(x + 1, y);
 	}
 
 	std::array<Cell*, 4> MazeGenerator::GetValidNeighbours(u16 x, u16 y)
@@ -135,10 +133,10 @@ namespace maze
 
 	void MazeGenerator::OpenWallBetween(Cell& a, Cell& b)
 	{
-		const s32 ax = (s32)a.GetX();
-		const s32 ay = (s32)a.GetY();
-		const s32 bx = (s32)b.GetX();
-		const s32 by = (s32)b.GetY();
+		const s32 ax = (s32)a.x;
+		const s32 ay = (s32)a.y;
+		const s32 bx = (s32)b.x;
+		const s32 by = (s32)b.y;
 
 		const s32 xDir = bx - ax;
 		const s32 yDir = by - ay;
@@ -156,3 +154,5 @@ namespace maze
 		}
 	}
 }
+
+#pragma warning(pop)	// MSVC Warning C28020

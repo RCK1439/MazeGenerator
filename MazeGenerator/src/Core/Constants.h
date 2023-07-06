@@ -1,3 +1,8 @@
+/*
+* Ruan C. Keet (2022)
+* Constants.h
+*/
+
 #pragma once
 
 #include "Types.h"

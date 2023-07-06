@@ -1,6 +1,7 @@
-
-// Ruan C. Keet (2022)
-// Cell.h
+/*
+* Ruan C. Keet (2022)
+* Cell.h
+*/
 
 #pragma once
 
@@ -8,7 +9,9 @@
 
 namespace maze
 {
-	// This class represents a single cell (tile) in our maze.
+	/*
+	* \brief This class represents a single cell in our grid.
+	*/
 	class Cell
 	{
 	public:
@@ -17,42 +20,40 @@ namespace maze
 		static constexpr u8 SOUTH_BIT = 0x2;
 		static constexpr u8 WEST_BIT  = 0x1;
 
+		u16 x, y;
 		u8 CellState = 0;
 
 	public:
-		// Constructs a new cell with its coordinates.
-		//
-		// @param x:	The x-coordinate of the cell.
-		// @param y:	The y-coordinate of the cell.
+		/*
+		* \brief Constructs a new cell with coordinates.
+		* 
+		* \param x:	The x-coordinate of the cell.
+		* \param y:	The y-coordinate of the cell.
+		*/
 		explicit Cell(u16 x, u16 y) : x(x), y(y) {}
 
-		// Destroys the cell.
+		/*
+		* \brief Destroys the cell.
+		*/
 		~Cell() = default;
 
-		// Checks if the cell has been visited or not.
-		//
-		// @return true, if the cell has been visited.
+		/*
+		* \brief Checks if the cell has been visited or not.
+		* 
+		* \return true, if the cell has been visited.
+		*/
 		inline constexpr bool IsVisited() const { return CellState & 0x10; }
 
-		// Visits the cell.
+		/*
+		* \brief Marks the cell as visited.
+		*/
 		inline void Visit() { CellState |= 0x10; }
 
-		// Gets the x-coordinate of the cell.
-		//
-		// @return The x-coordinate.
-		inline constexpr u16 GetX() const { return x; }
-
-		// Gets the y-coordinate of the cell.
-		//
-		// @return The y-coordinate.
-		inline constexpr u16 GetY() const { return y; }
-
-		// Renders the cell to the window.
-		//
-		// @param cellSize:	The size of the cells in the maze.
+		/*
+		* \brief Renders the cell to the window.
+		* 
+		* \param cellSize:	The size to draw the cell with.
+		*/
 		void OnRender(u8 cellSize) const;
-
-	private:
-		u16 x, y;
 	};
 }

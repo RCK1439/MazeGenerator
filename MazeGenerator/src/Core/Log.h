@@ -1,6 +1,7 @@
-
-// Ruan C. Keet (2022)
-// Log.h
+/*
+* Ruan C. Keet (2022)
+* Log.h
+*/
 
 #pragma once
 
