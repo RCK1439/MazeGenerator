@@ -9,6 +9,7 @@
 #include "MazeGenerator.h"
 
 #include "Core/Log.h"
+#include "Core/Types.h"
 
 #include <raylib.h>
 
