@@ -19,3 +19,7 @@ typedef signed long long	s64;
 
 typedef float				f32;
 typedef long double			f64;
+
+#if defined(MG_PLATFORM_LINUX)
+typedef unsigned long       size_t;
+#endif
