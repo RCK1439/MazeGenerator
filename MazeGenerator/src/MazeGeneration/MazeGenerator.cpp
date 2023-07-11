@@ -21,7 +21,7 @@ namespace maze
 		ConstructCellGrid();
 	}
 
-	MazeGenerator::MazeGenerator(u8 cellSize, u16 width, u16 height) :
+	MazeGenerator::MazeGenerator(u8 cellSize, u8 width, u8 height) :
 		m_CellSize(cellSize), m_Width(width), m_Height(height)
 	{
 		ConstructCellGrid();
@@ -48,8 +48,8 @@ namespace maze
 			{
 				const Cell& cell = m_Path.top();
 
-				const u16 sX = cell.x;
-				const u16 sY = cell.y;
+				const u8 sX = cell.x;
+				const u8 sY = cell.y;
 
 				if (HasValidNeighbour(sX, sY))
 				{
@@ -104,7 +104,7 @@ namespace maze
 		}
 	}
 
-	bool MazeGenerator::IsValidNeighbour(u16 x, u16 y)
+	bool MazeGenerator::IsValidNeighbour(u8 x, u8 y)
 	{
 		if (x >= m_Width || y >= m_Height)
 			return false;
@@ -112,7 +112,7 @@ namespace maze
 		return !m_Cells[y][x].IsVisited();
 	}
 
-	bool MazeGenerator::HasValidNeighbour(u16 x, u16 y)
+	bool MazeGenerator::HasValidNeighbour(u8 x, u8 y)
 	{
 		return IsValidNeighbour(x, y - 1) ||
 			   IsValidNeighbour(x + 1, y) ||
@@ -120,7 +120,7 @@ namespace maze
 			   IsValidNeighbour(x + 1, y);
 	}
 
-	std::array<Cell*, 4> MazeGenerator::GetValidNeighbours(u16 x, u16 y)
+	std::array<Cell*, 4> MazeGenerator::GetValidNeighbours(u8 x, u8 y)
 	{
 		std::array<Cell*, 4> neighbours = { nullptr, nullptr, nullptr, nullptr };
 
@@ -134,21 +134,15 @@ namespace maze
 
 	void MazeGenerator::OpenWallBetween(Cell& a, Cell& b)
 	{
-		const s32 ax = (s32)a.x;
-		const s32 ay = (s32)a.y;
-		const s32 bx = (s32)b.x;
-		const s32 by = (s32)b.y;
-
-		const s32 xDir = bx - ax;
-		const s32 yDir = by - ay;
+		const s8 xDir = b.x - a.x;
+		const s8 yDir = b.y - a.y;
 
 		if (xDir != 0)
 		{
 			a.CellState |= (xDir < 0 ? Cell::WEST_BIT : Cell::EAST_BIT);
 			b.CellState |= (xDir < 0 ? Cell::EAST_BIT : Cell::WEST_BIT);
 		}
-
-		if (yDir != 0)
+		else if (yDir != 0)
 		{
 			a.CellState |= (yDir < 0 ? Cell::NORTH_BIT : Cell::SOUTH_BIT);
 			b.CellState |= (yDir < 0 ? Cell::SOUTH_BIT : Cell::NORTH_BIT);
