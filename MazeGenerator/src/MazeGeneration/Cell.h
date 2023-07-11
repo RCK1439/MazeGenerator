@@ -9,7 +9,7 @@
 
 namespace maze
 {
-	/*
+	/**
 	* \brief This class represents a single cell in our grid.
 	*/
 	class Cell
@@ -20,36 +20,36 @@ namespace maze
 		static constexpr u8 SOUTH_BIT = 0x2;
 		static constexpr u8 WEST_BIT  = 0x1;
 
-		u16 x, y;
+		u8 x, y;
 		u8 CellState = 0;
 
 	public:
-		/*
+		/**
 		* \brief Constructs a new cell with coordinates.
 		* 
 		* \param x:	The x-coordinate of the cell.
 		* \param y:	The y-coordinate of the cell.
 		*/
-		explicit Cell(u16 x, u16 y) : x(x), y(y) {}
+		explicit Cell(u8 x, u8 y) : x(x), y(y) {}
 
-		/*
+		/**
 		* \brief Destroys the cell.
 		*/
 		~Cell() = default;
 
-		/*
+		/**
 		* \brief Checks if the cell has been visited or not.
 		* 
 		* \return true, if the cell has been visited.
 		*/
 		inline constexpr bool IsVisited() const { return CellState & 0x10; }
 
-		/*
+		/**
 		* \brief Marks the cell as visited.
 		*/
 		inline void Visit() { CellState |= 0x10; }
 
-		/*
+		/**
 		* \brief Renders the cell to the window.
 		* 
 		* \param cellSize:	The size to draw the cell with.
