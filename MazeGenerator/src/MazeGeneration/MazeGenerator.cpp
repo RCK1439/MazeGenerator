@@ -77,8 +77,8 @@ namespace maze
 
 	void MazeGenerator::OnRender() const
 	{
-		for (u16 y = 0; y < m_Height; y++)
-			for (u16 x = 0; x < m_Width; x++)
+		for (u8 y = 0; y < m_Height; y++)
+			for (u8 x = 0; x < m_Width; x++)
 				m_Cells[y][x].OnRender(m_CellSize);
 	}
 
@@ -94,12 +94,12 @@ namespace maze
 		m_Height = GetScreenHeight() / m_CellSize;
 
 		m_Cells.reserve(m_Height);
-		for (u16 y = 0; y < m_Height; y++)
+		for (u8 y = 0; y < m_Height; y++)
 		{
 			m_Cells.emplace_back();
 			m_Cells[y].reserve(m_Width);
 
-			for (u16 x = 0; x < m_Width; x++)
+			for (u8 x = 0; x < m_Width; x++)
 				m_Cells[y].emplace_back(x, y);
 		}
 	}
