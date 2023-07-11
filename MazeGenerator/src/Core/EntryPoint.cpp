@@ -9,7 +9,7 @@
 #if defined(MG_RELEASE) && defined(MG_PLATFORM_WINDOWS)
 #include <Windows.h>
 
-/*
+/**
 * \brief Entry point to the application for 64-bit Windows platforms.
 * 
 * \return The exit status of the program.
@@ -21,7 +21,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 }
 #elif defined(MG_DEBUG) || defined(MG_PLATFORM_LINUX)
 
-/*
+/**
 * \brief Entry point to the application.
 * 
 * \return The exit status of the program.
