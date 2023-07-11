@@ -10,8 +10,9 @@
 namespace maze
 {
 	static constexpr size_t NUM_TILES = 16;
+	static constexpr s32 FONT_SIZE	  = 20;
 
-	/*
+	/**
 	* \brief Data to be used by the renderer.
 	*/
 	struct RendererData
@@ -70,20 +71,20 @@ namespace maze
 			s_Data.TileSize * scale
 		};
 
-		DrawTexturePro(s_Data.SpriteSheet, s_Data.Tiles[tileID & 0x0F], dest, { 0.0f, 0.0f }, 0.0f, WHITE);
+		DrawTexturePro(s_Data.SpriteSheet, s_Data.Tiles[tileID & 0x0F], dest, { 0 }, 0.0f, WHITE);
 	}
 
-	void Renderer::DrawPerformanceMetrics()
+	void Renderer::DrawPerformanceMetrics() 
 	{
 		const s32 fps = GetFPS();
 		const f32 ft  = GetFrameTime() * 1000.0f;
 
-		DrawText(TextFormat("%d FPS", fps), 5, 5, 20, WHITE);
-		DrawText(TextFormat("%.2fms", ft), 5, 25, 20, WHITE);
+		DrawText(TextFormat("%d FPS", fps), 5, 5, FONT_SIZE, WHITE);
+		DrawText(TextFormat("%.2fms", ft), 5, 25, FONT_SIZE, WHITE);
 	}
 
 	void Renderer::RenderText(std::string_view text, u16 x, u16 y, Color color)
 	{
-		DrawText(text.data(), x, y, 20, color);
+		DrawText(text.data(), x, y, FONT_SIZE, color);
 	}
 }
