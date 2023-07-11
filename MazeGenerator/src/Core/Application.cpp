@@ -108,11 +108,11 @@ namespace maze
 				m_Generating = !m_Generator.IsFinish();
 			}
 
-			const float percentage = m_Generator.GetPercentageFinish();
+			const f32 percentage = m_Generator.GetPercentageFinish();
 			SetWindowTitle(TextFormat("Maze Generator by Keet - %.02f%%", percentage));
 		}
 
-		return !IsKeyPressed(KEY_ESCAPE);
+		return !WindowShouldClose();
 	}
 
 	void Application::OnRender()
@@ -149,7 +149,7 @@ namespace maze
 		{
 			constexpr f32 panelWidth = 515.0f;
 			constexpr f32 panelHeight = 90.0f;
-			const Rectangle panel =
+			constexpr Rectangle panel =
 			{
 				0.0f,
 				screenHeight - panelHeight,
@@ -176,7 +176,7 @@ namespace maze
 
 			constexpr f32 panelWidth = 155.0f;
 			constexpr f32 panelHeight = 90.0f;
-			const Rectangle panel =
+			constexpr Rectangle panel =
 			{
 				515.0f,
 				screenHeight - panelHeight,
@@ -196,8 +196,7 @@ namespace maze
 
 				m_Generating = false;
 			}
-
-			if (GuiButton({ panel.width - buttonWidth + 510.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, ">"))
+			else if (GuiButton({ panel.width - buttonWidth + 510.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, ">"))
 			{
 				cellSize = std::clamp<u8>(cellSize << 1, MIN_CELL_SIZE, MAX_CELL_SIZE);
 
@@ -216,7 +215,7 @@ namespace maze
 
 			constexpr f32 panelWidth = 155.0f;
 			constexpr f32 panelHeight = 90.0f;
-			const Rectangle panel =
+			constexpr Rectangle panel =
 			{
 				670.0f,
 				screenHeight - panelHeight,
@@ -231,8 +230,7 @@ namespace maze
 			{
 				m_Speed >>= 1;
 			}
-
-			if (GuiButton({ panel.width - buttonWidth + 665.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, ">"))
+			else if (GuiButton({ panel.width - buttonWidth + 665.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, ">"))
 			{
 				m_Speed <<= 1;
 			}
@@ -246,8 +244,8 @@ namespace maze
 	void Application::ResetMaze()
 	{
 		const u8 cellSize = m_Generator.GetCellSize();
-		const u16 width   = m_Generator.GetWidth();
-		const u16 height  = m_Generator.GetHeight();
+		const u8 width    = m_Generator.GetWidth();
+		const u8 height   = m_Generator.GetHeight();
 
 		m_Generator = MazeGenerator::Create(cellSize, width, height);
 	}
