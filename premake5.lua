@@ -12,7 +12,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 project "MazeGenerator"
     location "MazeGenerator"
     language "C++"
-    cppdialect "C++20"
+    cppdialect "C++17"
 
     targetdir ("%{wks.location}/bin/" .. outputdir)
     objdir ("%{wks.location}/bin-int/" .. outputdir)
