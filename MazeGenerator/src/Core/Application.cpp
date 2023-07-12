@@ -21,10 +21,13 @@ namespace maze
 	Application::Application()
 	{
 		SetConfigFlags(FLAG_VSYNC_HINT);
+		SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 
 		SetTraceLogLevel(LOG_NONE);
 		InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Maze Generator");
-		
+
+		SetWindowMinSize(1024, 512);
+
 		Image icon = LoadImage("res/icon.png");
 		SetWindowIcon(icon);
 		UnloadImage(icon);
@@ -102,6 +105,20 @@ namespace maze
 		if (IsKeyPressed(KEY_H))
 			m_HideGUI = !m_HideGUI;
 
+		if (IsKeyPressed(KEY_F))
+		{
+			s32 monitor = GetCurrentMonitor();
+			s32 width   = GetMonitorWidth(monitor);
+			s32 height  = GetMonitorHeight(monitor);
+
+			SetWindowSize(width, height);
+
+			ToggleFullscreen();
+		}
+
+		if (IsWindowResized())
+			ResetMaze();
+
 		if (m_Generating)
 		{
 			for (u8 i = 0; i < m_Speed; i++)
@@ -132,6 +149,10 @@ namespace maze
 			const f32 percentage = m_Generator.GetPercentageFinish();
 			Renderer::RenderText(TextFormat("Num. visited: %d/%d [%.2f%%]", numVisited, total, percentage), 5, 125);
 			Renderer::RenderText(TextFormat("Version: %s", MAZE_VERSION), 5, 155);
+
+			const u32 screenWidth = GetScreenWidth();
+			const u32 screenHeight = GetScreenHeight();
+			Renderer::RenderText(TextFormat("Dimensions: %hux%hu", screenWidth, screenHeight), 5, 185);
 		}
 
 		Renderer::End();
@@ -142,14 +163,14 @@ namespace maze
 		if (m_HideGUI)
 			return;
 
-		constexpr f32 screenWidth  = (f32)SCREEN_WIDTH;
-		constexpr f32 screenHeight = (f32)SCREEN_HEIGHT;
+		const f32 screenWidth  = (f32)GetScreenWidth();
+		const f32 screenHeight = (f32)GetScreenHeight();
 
 		// Play section.
 		{
 			constexpr f32 panelWidth = 515.0f;
 			constexpr f32 panelHeight = 90.0f;
-			constexpr Rectangle panel =
+			const Rectangle panel =
 			{
 				0.0f,
 				screenHeight - panelHeight,
@@ -164,10 +185,7 @@ namespace maze
 				m_Generating = true;
 
 			if (GuiButton({ buttonWidth + 10.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, "Reset"))
-			{
 				ResetMaze();
-				m_Generating = false;
-			}
 		}
 
 		// Size section.
@@ -176,7 +194,7 @@ namespace maze
 
 			constexpr f32 panelWidth = 155.0f;
 			constexpr f32 panelHeight = 90.0f;
-			constexpr Rectangle panel =
+			const Rectangle panel =
 			{
 				515.0f,
 				screenHeight - panelHeight,
@@ -191,19 +209,15 @@ namespace maze
 			{
 				cellSize = std::clamp<u8>(cellSize >> 1, MIN_CELL_SIZE, MAX_CELL_SIZE);
 
-				m_Generator.OnResize(cellSize);
+				m_Generator.SetCellSize(cellSize);
 				ResetMaze();
-
-				m_Generating = false;
 			}
 			else if (GuiButton({ panel.width - buttonWidth + 510.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, ">"))
 			{
 				cellSize = std::clamp<u8>(cellSize << 1, MIN_CELL_SIZE, MAX_CELL_SIZE);
 
-				m_Generator.OnResize(cellSize);
+				m_Generator.SetCellSize(cellSize);
 				ResetMaze();
-
-				m_Generating = false;
 			}
 
 			GuiDrawText(TextFormat("%d", cellSize), panel, TEXT_ALIGN_CENTER, { 255, 255, 255, 128 });
@@ -215,7 +229,7 @@ namespace maze
 
 			constexpr f32 panelWidth = 155.0f;
 			constexpr f32 panelHeight = 90.0f;
-			constexpr Rectangle panel =
+			const Rectangle panel =
 			{
 				670.0f,
 				screenHeight - panelHeight,
@@ -248,5 +262,7 @@ namespace maze
 		const u8 height   = m_Generator.GetHeight();
 
 		m_Generator = MazeGenerator::Create(cellSize, width, height);
+
+		m_Generating = false;
 	}
 }
