@@ -29,7 +29,7 @@ namespace maze
 
 	void MazeGenerator::OnUpdate()
 	{
-		LOG("Current: [{}, {}]", m_CurrentX, m_CurrentY);
+		LOG("Current: [%hhu, %hhu]", m_CurrentX, m_CurrentY);
 		Cell& current = m_Cells[m_CurrentY][m_CurrentX];
 
 		if (!current.IsVisited())
