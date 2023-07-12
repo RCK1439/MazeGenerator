@@ -9,7 +9,7 @@
 
 namespace maze
 {
-	constexpr const char* MAZE_VERSION = "1.1";
+	constexpr const char* MAZE_VERSION = "v1.2";
 
 	constexpr u8 MAX_GENERATION_SPEED = 64;
 	constexpr u8 MIN_GENERATION_SPEED =  1;
