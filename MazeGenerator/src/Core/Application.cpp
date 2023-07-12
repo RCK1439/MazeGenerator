@@ -29,8 +29,8 @@ namespace maze
 		SetWindowIcon(icon);
 		UnloadImage(icon);
 
-		InitGUI();
 		Renderer::Init();
+		InitGUI();
 
 		m_Generator = MazeGenerator::Create();
 
@@ -69,12 +69,14 @@ namespace maze
 		constexpr s32 lightBlue = 0xFFFFFFFF;
 		constexpr s32 darkBlue  = 0xEEEEEEFF;
 
+		GuiSetFont(Renderer::GetFont());
+
 		GuiSetStyle(BUTTON, BASE_COLOR_NORMAL,  gray);
 		GuiSetStyle(BUTTON, BASE_COLOR_FOCUSED, lightGray);
 		GuiSetStyle(BUTTON, BASE_COLOR_PRESSED, darkGray);
 
-		GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
-		GuiSetStyle(DEFAULT, TEXT_SPACING, 2);
+		GuiSetStyle(DEFAULT, TEXT_SIZE, 16);
+		GuiSetStyle(DEFAULT, TEXT_SPACING, 1);
 		GuiSetStyle(DEFAULT, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
 
 		GuiSetStyle(BUTTON, TEXT_COLOR_NORMAL,  blue);
@@ -125,13 +127,13 @@ namespace maze
 		if (m_Debug)
 		{
 			Renderer::DrawPerformanceMetrics();
-			Renderer::RenderText(TextFormat("Maze size: %dx%d", m_Generator.GetWidth(), m_Generator.GetHeight()), 5, 45);
-			Renderer::RenderText(TextFormat("Cell size: %d", m_Generator.GetCellSize()), 5, 65);
+			Renderer::RenderText(TextFormat("Maze size: %dx%d", m_Generator.GetWidth(), m_Generator.GetHeight()), 5, 65);
+			Renderer::RenderText(TextFormat("Cell size: %d", m_Generator.GetCellSize()), 5, 95);
 
 			const u32 numVisited = m_Generator.GetNumVisited();
 			const u16 total		 = m_Generator.GetWidth() * m_Generator.GetHeight();
 			const f32 percentage = m_Generator.GetPercentageFinish();
-			Renderer::RenderText(TextFormat("Num. visited: %d/%d [%.2f%%]", numVisited, total, percentage), 5, 85);
+			Renderer::RenderText(TextFormat("Num. visited: %d/%d [%.2f%%]", numVisited, total, percentage), 5, 125);
 		}
 
 		Renderer::End();
