@@ -17,16 +17,14 @@
 
 namespace maze
 {
-
 	Application::Application()
 	{
-		SetConfigFlags(FLAG_VSYNC_HINT);
-		SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+		SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
 
 		SetTraceLogLevel(LOG_NONE);
 		InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Maze Generator");
 
-		SetWindowMinSize(1024, 512);
+		SetWindowMinSize(s32(SCREEN_WIDTH / 1.5f), s32(SCREEN_HEIGHT / 1.5f));
 
 		Image icon = LoadImage("res/icon.png");
 		SetWindowIcon(icon);
@@ -112,7 +110,6 @@ namespace maze
 			s32 height  = GetMonitorHeight(monitor);
 
 			SetWindowSize(width, height);
-
 			ToggleFullscreen();
 		}
 
