@@ -160,7 +160,7 @@ namespace maze
 		u8 m_Width, m_Height;
 		u8 m_CurrentX = 0, m_CurrentY = 0;
 
-		std::vector<std::vector<Cell>> m_Cells;
+		std::vector<Cell> m_Cells;
 		std::stack<Cell> m_Path;
 
 		u32 m_NumVisited = 0;

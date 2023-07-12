@@ -30,7 +30,7 @@ namespace maze
 	void MazeGenerator::OnUpdate()
 	{
 		LOG("Current: [%hhu, %hhu]", m_CurrentX, m_CurrentY);
-		Cell& current = m_Cells[m_CurrentY][m_CurrentX];
+		Cell& current = m_Cells[m_CurrentX + m_CurrentY * m_Width];
 
 		if (!current.IsVisited())
 		{
@@ -77,9 +77,8 @@ namespace maze
 
 	void MazeGenerator::OnRender() const
 	{
-		for (u8 y = 0; y < m_Height; y++)
-			for (u8 x = 0; x < m_Width; x++)
-				m_Cells[y][x].OnRender(m_CellSize);
+		for (const Cell& cell : m_Cells)
+			cell.OnRender(m_CellSize);
 	}
 
 	void MazeGenerator::SetCellSize(u8 cellSize)
@@ -93,15 +92,11 @@ namespace maze
 		m_Width  = GetScreenWidth() / m_CellSize;
 		m_Height = GetScreenHeight() / m_CellSize;
 
-		m_Cells.reserve(m_Height);
-		for (u8 y = 0; y < m_Height; y++)
-		{
-			m_Cells.emplace_back();
-			m_Cells[y].reserve(m_Width);
+		m_Cells.reserve(m_Width * m_Height);
 
+		for (u8 y = 0; y < m_Height; y++)
 			for (u8 x = 0; x < m_Width; x++)
-				m_Cells[y].emplace_back(x, y);
-		}
+				m_Cells.emplace_back(x, y);
 	}
 
 	bool MazeGenerator::IsValidNeighbour(u8 x, u8 y)
@@ -109,7 +104,7 @@ namespace maze
 		if (x >= m_Width || y >= m_Height)
 			return false;
 
-		return !m_Cells[y][x].IsVisited();
+		return !m_Cells[x + y * m_Width].IsVisited();
 	}
 
 	bool MazeGenerator::HasValidNeighbour(u8 x, u8 y)
@@ -124,10 +119,10 @@ namespace maze
 	{
 		std::array<Cell*, 4> neighbours = { nullptr, nullptr, nullptr, nullptr };
 
-		if (IsValidNeighbour(x, y - 1)) neighbours[0] = &m_Cells[y - 1][x];
-		if (IsValidNeighbour(x + 1, y)) neighbours[1] = &m_Cells[y][x + 1];
-		if (IsValidNeighbour(x, y + 1)) neighbours[2] = &m_Cells[y + 1][x];
-		if (IsValidNeighbour(x - 1, y)) neighbours[3] = &m_Cells[y][x - 1];
+		if (IsValidNeighbour(x, y - 1)) neighbours[0] = &m_Cells[x + (y - 1) * m_Width];
+		if (IsValidNeighbour(x + 1, y)) neighbours[1] = &m_Cells[(x + 1) + y * m_Width];
+		if (IsValidNeighbour(x, y + 1)) neighbours[2] = &m_Cells[x + (y + 1) * m_Width];
+		if (IsValidNeighbour(x - 1, y)) neighbours[3] = &m_Cells[(x - 1) + y * m_Width];
 
 		return neighbours;
 	}
