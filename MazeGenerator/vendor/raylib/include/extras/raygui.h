@@ -2218,7 +2218,7 @@ bool GuiTextBox(Rectangle bounds, char *text, int bufferSize, bool editMode)
             int codepoint = GetCharPressed();       // Get Unicode codepoint
             if (multiline && IsKeyPressed(KEY_ENTER)) codepoint = (int)'\n';
 
-            if (textBoxCursorIndex > textLength) textBoxCursorIndex = textLength;
+            if ((int)textBoxCursorIndex > textLength) textBoxCursorIndex = textLength;
 
             // Encode codepoint as UTF-8
             int codepointSize = 0;
@@ -2229,7 +2229,7 @@ bool GuiTextBox(Rectangle bounds, char *text, int bufferSize, bool editMode)
             if (((multiline && (codepoint == (int)'\n')) || (codepoint >= 32)) && ((textLength + codepointSize) < bufferSize))
             {
                 // Move forward data from cursor position
-                for (int i = (textLength + codepointSize); i > textBoxCursorIndex; i--) text[i] = text[i - codepointSize];
+                for (int i = (textLength + codepointSize); i > (int)textBoxCursorIndex; i--) text[i] = text[i - codepointSize];
 
                 // Add new codepoint in current cursor position
                 for (int i = 0; i < codepointSize; i++) text[textBoxCursorIndex + i] = charEncoded[i];
@@ -2248,13 +2248,13 @@ bool GuiTextBox(Rectangle bounds, char *text, int bufferSize, bool editMode)
             }
 
             // Move cursor to end
-            if ((textLength > textBoxCursorIndex) && IsKeyPressed(KEY_END))
+            if ((textLength > (int)textBoxCursorIndex) && IsKeyPressed(KEY_END))
             {
                 textBoxCursorIndex = textLength;
             }
 
             // Delete codepoint from text, after current cursor position
-            if ((textLength > textBoxCursorIndex) && (IsKeyPressed(KEY_DELETE) || (IsKeyDown(KEY_DELETE) && (autoCursorCooldownCounter >= AUTO_CURSOR_COOLDOWN))))
+            if ((textLength > (int)textBoxCursorIndex) && (IsKeyPressed(KEY_DELETE) || (IsKeyDown(KEY_DELETE) && (autoCursorCooldownCounter >= AUTO_CURSOR_COOLDOWN))))
             {
                 autoCursorDelayCounter++;
 
@@ -2309,7 +2309,7 @@ bool GuiTextBox(Rectangle bounds, char *text, int bufferSize, bool editMode)
                     int prevCodepointSize = 0;
                     GetCodepointPrevious(text + textBoxCursorIndex, &prevCodepointSize);
 
-                    if (textBoxCursorIndex >= prevCodepointSize) textBoxCursorIndex -= prevCodepointSize;
+                    if ((int)textBoxCursorIndex >= prevCodepointSize) textBoxCursorIndex -= prevCodepointSize;
                 }
             }
             else if (IsKeyPressed(KEY_RIGHT) || (IsKeyDown(KEY_RIGHT) && (autoCursorCooldownCounter > AUTO_CURSOR_COOLDOWN)))
@@ -2321,7 +2321,7 @@ bool GuiTextBox(Rectangle bounds, char *text, int bufferSize, bool editMode)
                     int nextCodepointSize = 0;
                     GetCodepointNext(text + textBoxCursorIndex, &nextCodepointSize);
 
-                    if ((textBoxCursorIndex + nextCodepointSize) <= textLength) textBoxCursorIndex += nextCodepointSize;
+                    if ((int)(textBoxCursorIndex + nextCodepointSize) <= textLength) textBoxCursorIndex += nextCodepointSize;
                 }
             }
 
@@ -2352,7 +2352,7 @@ bool GuiTextBox(Rectangle bounds, char *text, int bufferSize, bool editMode)
                 if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
                 {
                     pressed = true;         // Entering edit mode
-                    textBoxCursorIndex = strlen(text);   // GLOBAL: Place cursor index to the end of current text
+                    textBoxCursorIndex = (unsigned int)strlen(text);   // GLOBAL: Place cursor index to the end of current text
                 }
             }
         }
@@ -4012,18 +4012,8 @@ static Rectangle GetTextBounds(int control, Rectangle bounds)
     textBounds.width = bounds.width - 2*GuiGetStyle(control, BORDER_WIDTH) - 2*GuiGetStyle(control, TEXT_PADDING);
     textBounds.height = bounds.height - 2*GuiGetStyle(control, BORDER_WIDTH) - 2*GuiGetStyle(control, TEXT_PADDING);
 
-    // Consider TEXT_PADDING properly, depends on control type and TEXT_ALIGNMENT
-    // TODO: Special cases (no label): COMBOBOX, DROPDOWNBOX, LISTVIEW (scrollbar?)
-    // More special cases (label on side): CHECKBOX, SLIDER, VALUEBOX, SPINNER
-    switch (control)
-    {
-        default:
-        {
-            if (GuiGetStyle(control, TEXT_ALIGNMENT) == TEXT_ALIGN_RIGHT) textBounds.x -= GuiGetStyle(control, TEXT_PADDING);
-            else textBounds.x += GuiGetStyle(control, TEXT_PADDING);
-        }
-        break;
-    }
+    if (GuiGetStyle(control, TEXT_ALIGNMENT) == TEXT_ALIGN_RIGHT) textBounds.x -= GuiGetStyle(control, TEXT_PADDING);
+    else textBounds.x += GuiGetStyle(control, TEXT_PADDING);
 
     return textBounds;
 }
@@ -4241,7 +4231,7 @@ static void GuiTooltip(Rectangle controlRec)
 {
     if (!guiLocked && guiTooltip && (guiTooltipPtr != NULL) && !guiSliderDragging)
     {
-        Vector2 textSize = MeasureTextEx(GuiGetFont(), guiTooltipPtr, GuiGetStyle(DEFAULT, TEXT_SIZE), GuiGetStyle(DEFAULT, TEXT_SPACING));
+        Vector2 textSize = MeasureTextEx(GuiGetFont(), guiTooltipPtr, (float)GuiGetStyle(DEFAULT, TEXT_SIZE), (float)GuiGetStyle(DEFAULT, TEXT_SPACING));
 
         if ((controlRec.x + textSize.x + 16) > GetScreenWidth()) controlRec.x -= (textSize.x + 16 - controlRec.width);
 
@@ -4513,8 +4503,8 @@ static int GuiScrollBar(Rectangle bounds, int value, int minValue, int maxValue)
             {
                 if (CHECK_BOUNDS_ID(bounds, guiSliderActive))
                 {
-                    if (isVertical) value += (GetMouseDelta().y/(scrollbar.height - slider.height)*valueRange);
-                    else value += (GetMouseDelta().x/(scrollbar.width - slider.width)*valueRange);
+                    if (isVertical) value += (int)(GetMouseDelta().y/(scrollbar.height - slider.height)*valueRange);
+                    else value += (int)(GetMouseDelta().x/(scrollbar.width - slider.width)*valueRange);
                 }
             }
             else
@@ -4550,8 +4540,8 @@ static int GuiScrollBar(Rectangle bounds, int value, int minValue, int maxValue)
             }
             else if (IsMouseButtonDown(MOUSE_LEFT_BUTTON))
             {
-                if (isVertical) value += (GetMouseDelta().y/(scrollbar.height - slider.height)*valueRange);
-                else value += (GetMouseDelta().x/(scrollbar.width - slider.width)*valueRange);
+                if (isVertical) value += (int)(GetMouseDelta().y/(scrollbar.height - slider.height)*valueRange);
+                else value += (int)(GetMouseDelta().x/(scrollbar.width - slider.width)*valueRange);
             }
 
             // Keyboard control on mouse hover scrollbar
