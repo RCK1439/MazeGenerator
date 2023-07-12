@@ -8,7 +8,7 @@
 #if defined(MG_DEBUG)
 	#include <stdio.h>
 
-	#define LOG(...) printf(__VA_ARGS__); printf("\n")
+	#define LOG(...) printf("[DEBUG]: MAZE GENERATOR: "); printf(__VA_ARGS__)
 #elif defined(MG_RELEASE)
 	#define LOG(...)
 #endif

@@ -24,7 +24,7 @@ namespace maze
 		SetTraceLogLevel(LOG_NONE);
 		InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Maze Generator");
 
-		SetWindowMinSize(s32(SCREEN_WIDTH / 1.5f), s32(SCREEN_HEIGHT / 1.5f));
+		SetWindowMinSize(s32(SCREEN_WIDTH * 0.6667f), s32(SCREEN_HEIGHT * 0.6667f));
 
 		Image icon = LoadImage("res/icon.png");
 		SetWindowIcon(icon);
@@ -34,8 +34,7 @@ namespace maze
 		InitGUI();
 
 		m_Generator = MazeGenerator::Create();
-
-		LOG("Application created successfully.");
+		LOG("Application created successfully.\n");
 	}
 
 	Application::~Application()
@@ -43,8 +42,7 @@ namespace maze
 		Renderer::Shutdown();
 
 		CloseWindow();
-
-		LOG("Application closed successfully.");
+		LOG("Application closed successfully.\n");
 	}
 
 	void Application::Run()
@@ -255,8 +253,8 @@ namespace maze
 	void Application::ResetMaze()
 	{
 		const u8 cellSize = m_Generator.GetCellSize();
-		const u8 width    = m_Generator.GetWidth();
-		const u8 height   = m_Generator.GetHeight();
+		const u16 width   = m_Generator.GetWidth();
+		const u16 height  = m_Generator.GetHeight();
 
 		m_Generator = MazeGenerator::Create(cellSize, width, height);
 

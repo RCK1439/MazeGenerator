@@ -31,7 +31,7 @@ namespace maze
 		* \param width:		The width of the grid.
 		* \param height:	The height of the grid.
 		*/
-		MazeGenerator(u8 cellSize, u8 width, u8 height);
+		MazeGenerator(u8 cellSize, u16 width, u16 height);
 
 		/**
 		* \brief Destroys the MazeGenerator.
@@ -102,14 +102,14 @@ namespace maze
 		* 
 		* \return The width of the grid.
 		*/
-		inline u8 GetWidth() const { return m_Width; }
+		inline u16 GetWidth() const { return m_Width; }
 
 		/**
 		* \brief Gets the height of the grid.
 		* 
 		* \return The height of the grid.
 		*/
-		inline u8 GetHeight() const { return m_Height; }
+		inline u16 GetHeight() const { return m_Height; }
 
 	private:
 		/**
@@ -128,7 +128,7 @@ namespace maze
 		* 
 		* \return true, if the cell at the coordinates is a valid neighbour.
 		*/
-		bool IsValidNeighbour(u8 x, u8 y);
+		bool IsValidNeighbour(u16 x, u16 y);
 
 		/**
 		* \brief Checks if the cell at the given coordinates has atleast one valid neighbour.
@@ -138,13 +138,13 @@ namespace maze
 		* 
 		* \return true, if the cell has atleast one valid neighbour.
 		*/
-		bool HasValidNeighbour(u8 x, u8 y);
+		bool HasValidNeighbour(u16 x, u16 y);
 
 		/**
 		* \brief Gets a list of all the valid neighbours surrounding the cell at
 		* the specified coordinates.
 		*/
-		std::array<Cell*, 4> GetValidNeighbours(u8 x, u8 y);
+		std::array<Cell*, 4> GetValidNeighbours(u16 x, u16 y);
 
 		/**
 		* \brief Opens the wall between the two cells. It is assumed that these cells
@@ -157,8 +157,8 @@ namespace maze
 
 	private:
 		u8 m_CellSize = 16;
-		u8 m_Width, m_Height;
-		u8 m_CurrentX = 0, m_CurrentY = 0;
+		u16 m_Width, m_Height;
+		u16 m_CurrentX = 0, m_CurrentY = 0;
 
 		std::vector<Cell> m_Cells;
 		std::stack<Cell> m_Path;

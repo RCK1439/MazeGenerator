@@ -21,7 +21,7 @@ namespace maze
 		ReconstructCellGrid();
 	}
 
-	MazeGenerator::MazeGenerator(u8 cellSize, u8 width, u8 height) :
+	MazeGenerator::MazeGenerator(u8 cellSize, u16 width, u16 height) :
 		m_CellSize(cellSize), m_Width(width), m_Height(height)
 	{
 		ReconstructCellGrid();
@@ -29,9 +29,7 @@ namespace maze
 
 	void MazeGenerator::OnUpdate()
 	{
-		LOG("Current: [%hhu, %hhu]", m_CurrentX, m_CurrentY);
 		Cell& current = m_Cells[m_CurrentX + m_CurrentY * m_Width];
-
 		if (!current.IsVisited())
 		{
 			current.Visit();
@@ -40,6 +38,8 @@ namespace maze
 
 		if (IsFinish())
 			return;
+
+		LOG("Current: [%3hu, %3hu]\r", m_CurrentX, m_CurrentY);
 
 		std::array<Cell*, 4> validNeighbours = GetValidNeighbours(m_CurrentX, m_CurrentY);
 		if (!validNeighbours[0] && !validNeighbours[1] && !validNeighbours[2] && !validNeighbours[3])
@@ -99,7 +99,7 @@ namespace maze
 				m_Cells.emplace_back(x, y);
 	}
 
-	bool MazeGenerator::IsValidNeighbour(u8 x, u8 y)
+	bool MazeGenerator::IsValidNeighbour(u16 x, u16 y)
 	{
 		if (x >= m_Width || y >= m_Height)
 			return false;
@@ -107,7 +107,7 @@ namespace maze
 		return !m_Cells[x + y * m_Width].IsVisited();
 	}
 
-	bool MazeGenerator::HasValidNeighbour(u8 x, u8 y)
+	bool MazeGenerator::HasValidNeighbour(u16 x, u16 y)
 	{
 		return IsValidNeighbour(x, y - 1) ||
 			   IsValidNeighbour(x + 1, y) ||
@@ -115,7 +115,7 @@ namespace maze
 			   IsValidNeighbour(x + 1, y);
 	}
 
-	std::array<Cell*, 4> MazeGenerator::GetValidNeighbours(u8 x, u8 y)
+	std::array<Cell*, 4> MazeGenerator::GetValidNeighbours(u16 x, u16 y)
 	{
 		std::array<Cell*, 4> neighbours = { nullptr, nullptr, nullptr, nullptr };
 
