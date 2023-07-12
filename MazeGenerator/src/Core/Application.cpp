@@ -23,7 +23,7 @@ namespace maze
 		SetConfigFlags(FLAG_VSYNC_HINT);
 
 		SetTraceLogLevel(LOG_NONE);
-		InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Maze Generator by Keet");
+		InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Maze Generator");
 		
 		Image icon = LoadImage("res/icon.png");
 		SetWindowIcon(icon);
@@ -109,9 +109,6 @@ namespace maze
 				m_Generator.OnUpdate();
 				m_Generating = !m_Generator.IsFinish();
 			}
-
-			const f32 percentage = m_Generator.GetPercentageFinish();
-			SetWindowTitle(TextFormat("Maze Generator by Keet - %.02f%%", percentage));
 		}
 
 		return !WindowShouldClose();
@@ -134,6 +131,7 @@ namespace maze
 			const u16 total		 = m_Generator.GetWidth() * m_Generator.GetHeight();
 			const f32 percentage = m_Generator.GetPercentageFinish();
 			Renderer::RenderText(TextFormat("Num. visited: %d/%d [%.2f%%]", numVisited, total, percentage), 5, 125);
+			Renderer::RenderText(TextFormat("Version: %s", MAZE_VERSION), 5, 155);
 		}
 
 		Renderer::End();
