@@ -63,5 +63,12 @@ namespace maze
 		* \param color:	The colour to draw the text in.
 		*/
 		static void RenderText(std::string_view text, u16 x, u16 y, Color = WHITE);
+
+		/**
+		* \brief Gets the font used to render text.
+		*
+		* \return The font used by the renderer.
+		*/
+		static const Font& GetFont();
 	};
 }
