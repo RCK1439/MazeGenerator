@@ -65,7 +65,7 @@ namespace maze
 
 	void Renderer::DrawTile(u8 tileID, u16 x, u16 y, u16 cellSize)
 	{
-		const f32 scale = (f32)cellSize / (f32)s_Data.TileSize;
+		const f32 scale  = ((f32)cellSize / (f32)s_Data.TileSize);
 		const Rectangle dest =
 		{
 			(f32)x,
