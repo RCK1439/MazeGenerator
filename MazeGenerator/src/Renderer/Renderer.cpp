@@ -10,7 +10,7 @@
 namespace maze
 {
 	static constexpr size_t NUM_TILES = 16;
-	static constexpr s32 FONT_SIZE	  = 20;
+	static constexpr s32 FONT_SIZE	  = 24;
 
 	/**
 	* \brief Data to be used by the renderer.
@@ -20,13 +20,14 @@ namespace maze
 		Texture2D SpriteSheet;
 		u32 TileSize;
 		std::array<Rectangle, NUM_TILES> Tiles;
+		Font TextFont;
 	};
 
 	static RendererData s_Data;
 
 	void Renderer::Init()
 	{
-		s_Data.SpriteSheet = LoadTexture("res/tiles.png");
+		s_Data.SpriteSheet = LoadTexture("res/textures/tiles.png");
 
 		const u32 width  = s_Data.SpriteSheet.width;
 		const u32 height = s_Data.SpriteSheet.height;
@@ -42,6 +43,8 @@ namespace maze
 				(f32)(s_Data.TileSize)
 			};
 		}
+
+		s_Data.TextFont = LoadFont("res/fonts/minecraft.ttf");
 	}
 
 	void Renderer::Shutdown()
@@ -79,12 +82,24 @@ namespace maze
 		const s32 fps = GetFPS();
 		const f32 ft  = GetFrameTime() * 1000.0f;
 
-		DrawText(TextFormat("%d FPS", fps), 5, 5, FONT_SIZE, WHITE);
-		DrawText(TextFormat("%.2fms", ft), 5, 25, FONT_SIZE, WHITE);
+		RenderText(TextFormat("%d FPS", fps), 5,  5, WHITE);
+		RenderText(TextFormat("%.2fms", ft),  5, 35, WHITE);
 	}
 
 	void Renderer::RenderText(std::string_view text, u16 x, u16 y, Color color)
 	{
-		DrawText(text.data(), x, y, FONT_SIZE, color);
+		constexpr Color borderColor = { 0, 0, 0, 64 };
+
+		const Vector2 dimensions = MeasureTextEx(s_Data.TextFont, text.data(), FONT_SIZE, 2);
+		const Vector2 position   = { (f32)x, (f32)y };
+		const Rectangle border = { position.x, position.y, dimensions.x, dimensions.y };
+
+		DrawRectangleRec(border, borderColor);
+		DrawTextPro(s_Data.TextFont, text.data(), { (f32)x, (f32)y }, { 0 }, 0.0f, (f32)FONT_SIZE, 2, color);
+	}
+
+	const Font& Renderer::GetFont()
+	{
+		return s_Data.TextFont;
 	}
 }
