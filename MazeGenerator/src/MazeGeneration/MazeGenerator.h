@@ -74,21 +74,21 @@ namespace maze
 		* 
 		* \return The percentage finish of the generation algorithm.
 		*/
-		inline constexpr float GetPercentageFinish() const { return (100.0f * m_NumVisited) / (f32)(m_Width * m_Height); }
+		inline f32 GetPercentageFinish() const { return (100.0f * m_NumVisited) / (f32)(m_Width * m_Height); }
 
 		/**
 		* \brief Gets the number of cells already visited by the algorithm
 		* 
 		* \return The number of visited cells.
 		*/
-		inline constexpr u32 GetNumVisited() const { return m_NumVisited; }
+		inline u32 GetNumVisited() const { return m_NumVisited; }
 
 		/**
 		* \brief Sets the size of the cells.
 		* 
 		* \param cellSize:	The size to set the cells to.
 		*/
-		inline void SetCellSize(u8 cellSize) { m_CellSize = cellSize; }
+		void SetCellSize(u8 cellSize);
 
 		/**
 		* \brief Gets the size of the cells.
@@ -110,19 +110,12 @@ namespace maze
 		* \return The height of the grid.
 		*/
 		inline u8 GetHeight() const { return m_Height; }
-		
-		/**
-		* \brief Ajusts the MazeGenerator for when the grid is resized.
-		* 
-		* \param cellSize:	The size of the cells.
-		*/
-		void OnResize(u8 cellSize);
 
 	private:
 		/**
-		* \brief Initializes the arrays holding all the cells.
+		* \brief Constructs the arrays holding all the cells.
 		*/
-		void ConstructCellGrid();
+		void ReconstructCellGrid();
 
 		/**
 		* \brief Checks if the cell at the given coordinates is a valid neighbour.

@@ -18,13 +18,13 @@ namespace maze
 
 	MazeGenerator::MazeGenerator()
 	{
-		ConstructCellGrid();
+		ReconstructCellGrid();
 	}
 
 	MazeGenerator::MazeGenerator(u8 cellSize, u8 width, u8 height) :
 		m_CellSize(cellSize), m_Width(width), m_Height(height)
 	{
-		ConstructCellGrid();
+		ReconstructCellGrid();
 	}
 
 	void MazeGenerator::OnUpdate()
@@ -82,13 +82,13 @@ namespace maze
 				m_Cells[y][x].OnRender(m_CellSize);
 	}
 
-	void MazeGenerator::OnResize(u8 cellSize)
+	void MazeGenerator::SetCellSize(u8 cellSize)
 	{
 		m_CellSize = cellSize;
-		ConstructCellGrid();
+		ReconstructCellGrid();
 	}
 
-	void MazeGenerator::ConstructCellGrid()
+	void MazeGenerator::ReconstructCellGrid()
 	{
 		m_Width  = GetScreenWidth() / m_CellSize;
 		m_Height = GetScreenHeight() / m_CellSize;
