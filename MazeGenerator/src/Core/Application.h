@@ -7,6 +7,8 @@
 
 #include "MazeGeneration/MazeGenerator.h"
 
+#include "Renderer/Viewport.h"
+
 namespace maze
 {
 	/**
@@ -69,5 +71,8 @@ namespace maze
 
 		u8 m_Speed = 1;
 		bool m_HideGUI = false;
+
+		Viewport m_Camera;
+		bool m_Follow = false;
 	};
 }
