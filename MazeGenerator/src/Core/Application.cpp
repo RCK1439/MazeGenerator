@@ -17,9 +17,11 @@
 
 namespace maze
 {
-	Application::Application()
+
+	Application::Application() :
+		m_Camera({ SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f })
 	{
-		SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
+		SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
 
 		SetTraceLogLevel(LOG_NONE);
 		InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Maze Generator");
@@ -112,7 +114,10 @@ namespace maze
 		}
 
 		if (IsWindowResized())
+		{
 			ResetMaze();
+			m_Camera.OnResize();
+		}
 
 		if (m_Generating)
 		{
@@ -123,6 +128,8 @@ namespace maze
 			}
 		}
 
+		m_Camera.OnUpdate(dt, m_Generator.GetCurrentPosition(), m_Follow);
+
 		return !WindowShouldClose();
 	}
 
@@ -130,7 +137,9 @@ namespace maze
 	{
 		Renderer::Begin();
 
-		m_Generator.OnRender();
+		m_Camera.Begin();
+			m_Generator.OnRender();
+		m_Camera.End();
 
 		OnGuiRender();
 		if (m_Debug)
@@ -148,6 +157,8 @@ namespace maze
 			const u32 screenWidth = GetScreenWidth();
 			const u32 screenHeight = GetScreenHeight();
 			Renderer::RenderText(TextFormat("Dimensions: %hux%hu", screenWidth, screenHeight), 5, 185);
+
+			m_Camera.OnRender();
 		}
 
 		Renderer::End();
@@ -247,6 +258,26 @@ namespace maze
 			m_Speed = std::clamp<u8>(m_Speed, MIN_GENERATION_SPEED, MAX_GENERATION_SPEED);
 
 			GuiDrawText(TextFormat("%dx", m_Speed), panel, TEXT_ALIGN_CENTER, { 255, 255, 255, 128 });
+		}
+
+		// Camera
+		{
+			constexpr f32 panelWidth = 155.0f;
+			constexpr f32 panelHeight = 90.0f;
+			const Rectangle panel =
+			{
+				825.0f,
+				screenHeight - panelHeight,
+				panelWidth,
+				panelHeight
+			};
+			GuiPanel(panel, "Camera");
+
+			constexpr f32 boxWidth = 50.0f;
+			constexpr f32 boxHeight = 50.0f;
+			const Rectangle button = { panel.x + 5.0f, screenHeight - boxHeight - 7, boxWidth, boxHeight };
+
+			m_Follow = GuiCheckBox(button, "Follow  ", m_Follow);
 		}
 	}
 
