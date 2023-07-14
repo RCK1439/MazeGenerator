@@ -1,5 +1,7 @@
 # MazeGenerator
 
+![by Ruan Keet](MazeGenerator/res/icon.png)
+
 This is a visualisation of a maze generation algorithm. The algorithm used is [randomised depth first search](https://en.wikipedia.org/wiki/Maze_generation_algorithm). This shows a mesmerising visualisation of how the algorithm "carves" a maze out of a grid.
 
 ## Installing
