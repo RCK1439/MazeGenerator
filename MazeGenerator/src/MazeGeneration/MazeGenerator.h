@@ -7,6 +7,7 @@
 
 #include "Cell.h"
 
+#include <raylib.h>
 #include <array>
 #include <stack>
 #include <vector>
@@ -110,6 +111,20 @@ namespace maze
 		* \return The height of the grid.
 		*/
 		inline u16 GetHeight() const { return m_Height; }
+
+		/**
+		* \brief Gets the current position of the generator.
+		* 
+		* \return The current position.
+		*/
+		inline Vector2 GetCurrentPosition() const 
+		{ 
+			return Vector2
+			{ 
+				(f32)(m_CurrentX * m_CellSize) - m_CellSize / 2, 
+				(f32)(m_CurrentY * m_CellSize) - m_CellSize / 2
+			}; 
+		}
 
 	private:
 		/**
