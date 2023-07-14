@@ -26,7 +26,7 @@ namespace maze
 		SetTraceLogLevel(LOG_NONE);
 		InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Maze Generator");
 
-		SetWindowMinSize(s32(SCREEN_WIDTH * 0.6667f), s32(SCREEN_HEIGHT * 0.6667f));
+		SetWindowMinSize(1280, 640);
 
 		Image icon = LoadImage("res/icon.png");
 		SetWindowIcon(icon);
