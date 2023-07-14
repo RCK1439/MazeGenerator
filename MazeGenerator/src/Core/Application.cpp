@@ -250,7 +250,7 @@ namespace maze
 			{
 				m_Speed >>= 1;
 			}
-			else if (GuiButton({ panel.width - buttonWidth + 665.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, ">"))
+			else if (GuiButton({ panel.width - buttonWidth + 675.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, ">"))
 			{
 				m_Speed <<= 1;
 			}
