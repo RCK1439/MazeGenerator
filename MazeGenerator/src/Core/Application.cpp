@@ -198,7 +198,7 @@ namespace maze
 		{
 			u8 cellSize = m_Generator.GetCellSize();
 
-			constexpr f32 panelWidth = 155.0f;
+			constexpr f32 panelWidth = 165.0f;
 			constexpr f32 panelHeight = 90.0f;
 			const Rectangle panel =
 			{
@@ -207,7 +207,7 @@ namespace maze
 				panelWidth,
 				panelHeight
 			};
-			GuiPanel(panel, "Cell Size (px)");
+			GuiPanel(panel, "Cell Size [px]");
 
 			constexpr f32 buttonWidth  = 50.0f;
 			constexpr f32 buttonHeight = 50.0f;
@@ -237,7 +237,7 @@ namespace maze
 			constexpr f32 panelHeight = 90.0f;
 			const Rectangle panel =
 			{
-				670.0f,
+				680.0f,
 				screenHeight - panelHeight,
 				panelWidth,
 				panelHeight
@@ -266,7 +266,7 @@ namespace maze
 			constexpr f32 panelHeight = 90.0f;
 			const Rectangle panel =
 			{
-				825.0f,
+				835.0f,
 				screenHeight - panelHeight,
 				panelWidth,
 				panelHeight
