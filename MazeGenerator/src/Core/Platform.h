@@ -8,6 +8,7 @@
 #if defined(_WIN32)
 #	if defined(_WIN64)
 #		define MG_PLATFORM_WINDOWS
+#       define _AMD64_
 #	else
 #		error "x86 builds not supported"
 #	endif
