@@ -1,8 +1,14 @@
-.vscode
-.vs
-bin
-bin-int
+# Directories
+
+.vscode/
+.vs/
+bin/
+bin-int/
+
+# Files
+
 *.sln
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
+*.aps
