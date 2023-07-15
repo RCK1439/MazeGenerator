@@ -13,6 +13,7 @@
 #include <raylib.h>
 #define RAYGUI_IMPLEMENTATION
 #include <extras/raygui.h>
+#include <external/glfw/include/GLFW/glfw3.h>
 #include <algorithm>
 
 namespace maze
@@ -119,6 +120,9 @@ namespace maze
 			m_Camera.OnResize();
 		}
 
+		if (IsKeyPressed(KEY_F2))
+			ToggleVsync();
+
 		if (m_Generating)
 		{
 			for (u8 i = 0; i < m_Speed; i++)
@@ -158,7 +162,9 @@ namespace maze
 			const u32 screenHeight = GetScreenHeight();
 			Renderer::RenderText(TextFormat("Dimensions: %hux%hu", screenWidth, screenHeight), 5, 185);
 
-			m_Camera.OnRender();
+			m_Camera.OnRender(); // Ends at y = 275.
+
+			Renderer::RenderText(TextFormat("V-Sync: %s (F2 to toggle)", m_Vsync ? "true" : "false"), 5, 305);
 		}
 
 		Renderer::End();
@@ -213,14 +219,14 @@ namespace maze
 			constexpr f32 buttonHeight = 50.0f;
 			if (GuiButton({ panel.x + 5.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, "<"))
 			{
-				cellSize = std::clamp<u8>(cellSize >> 1, MIN_CELL_SIZE, MAX_CELL_SIZE);
+				cellSize = std::clamp<u8>(u8(cellSize >> 1), MIN_CELL_SIZE, MAX_CELL_SIZE);
 
 				m_Generator.SetCellSize(cellSize);
 				ResetMaze();
 			}
 			else if (GuiButton({ panel.width - buttonWidth + 510.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, ">"))
 			{
-				cellSize = std::clamp<u8>(cellSize << 1, MIN_CELL_SIZE, MAX_CELL_SIZE);
+				cellSize = std::clamp<u8>(u8(cellSize << 1), MIN_CELL_SIZE, MAX_CELL_SIZE);
 
 				m_Generator.SetCellSize(cellSize);
 				ResetMaze();
@@ -290,5 +296,11 @@ namespace maze
 		m_Generator = MazeGenerator::Create(cellSize, width, height);
 
 		m_Generating = false;
+	}
+
+	void Application::ToggleVsync()
+	{
+		m_Vsync = !m_Vsync;
+		glfwSwapInterval(m_Vsync ? 1 : 0);
 	}
 }

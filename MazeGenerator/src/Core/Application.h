@@ -62,9 +62,15 @@ namespace maze
 		*/
 		void ResetMaze();
 
+		/**
+		* \brief Toggles the vertical sync of the window.
+		*/
+		void ToggleVsync();
+
 	private:
 		bool m_IsRunning = true;
 		bool m_Debug = false;
+		bool m_Vsync = true;
 
 		bool m_Generating = false;
 		MazeGenerator m_Generator;
