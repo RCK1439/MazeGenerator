@@ -254,6 +254,8 @@
     #include "raylib.h"
 #endif
 
+#include <assert.h>
+
 // Function specifiers in case library is build/used as a shared library (Windows)
 // NOTE: Microsoft specifiers to tell compiler that symbols are imported/exported from a .dll
 #if defined(_WIN32)
@@ -3486,7 +3488,8 @@ void GuiLoadStyle(const char *fileName)
                     {
                         // Style property: p <control_id> <property_id> <property_value> <property_name>
 
-                        sscanf(buffer, "p %d %d 0x%x", &controlId, &propertyId, &propertyValue);
+                        int success = sscanf(buffer, "p %d %d 0x%x", &controlId, &propertyId, &propertyValue);
+                        assert(success);
                         GuiSetStyle(controlId, propertyId, (int)propertyValue);
 
                     } break;
@@ -3497,7 +3500,8 @@ void GuiLoadStyle(const char *fileName)
                         int fontSize = 0;
                         char charmapFileName[256] = { 0 };
                         char fontFileName[256] = { 0 };
-                        sscanf(buffer, "f %d %s %[^\r\n]s", &fontSize, charmapFileName, fontFileName);
+                        int success = sscanf(buffer, "f %d %s %[^\r\n]s", &fontSize, charmapFileName, fontFileName);
+                        assert(success);
 
                         Font font = { 0 };
 
@@ -3555,6 +3559,8 @@ void GuiLoadStyle(const char *fileName)
             if (fileDataSize > 0)
             {
                 unsigned char *fileData = (unsigned char *)RL_MALLOC(fileDataSize*sizeof(unsigned char));
+                assert(fileData);
+
                 fread(fileData, sizeof(unsigned char), fileDataSize, rgsFile);
 
                 GuiLoadStyleFromMemory(fileData, fileDataSize);
@@ -3760,7 +3766,7 @@ char **GuiLoadIcons(const char *fileName, bool loadIconsName)
             else fseek(rgiFile, iconCount*RAYGUI_ICON_MAX_NAME_LENGTH, SEEK_CUR);
 
             // Read icons data directly over internal icons array
-            fread(guiIconsPtr, sizeof(unsigned int), iconCount*(iconSize*iconSize/32), rgiFile);
+            fread(guiIconsPtr, sizeof(unsigned int), (size_t)iconCount*(size_t)(iconSize*iconSize/32), rgiFile);
         }
 
         fclose(rgiFile);
