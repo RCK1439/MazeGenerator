@@ -16,10 +16,8 @@ namespace maze
     static constexpr f32 MIN_ZOOM = 1.0f;
     static constexpr f32 MAX_ZOOM = 8.0f;
 
-    Viewport::Viewport(Vector2 target)
+    Viewport::Viewport(Vector2 target, Vector2 offset)
     {
-        Vector2 offset = { (f32)(SCREEN_WIDTH / 2), (f32)(SCREEN_HEIGHT / 2) };
-
         m_Camera.offset = offset;
         m_Camera.target = target;
         m_Camera.rotation = 0.0f;
@@ -56,8 +54,7 @@ namespace maze
         const Vector2 min = { m_Camera.offset.x / m_Camera.zoom, m_Camera.offset.y / m_Camera.zoom };
         const Vector2 max = { 2 * m_Camera.offset.x - min.x, 2 * m_Camera.offset.y - min.y };
 
-        m_Camera.target.x = std::clamp<f32>(m_Camera.target.x, min.x, max.x);
-        m_Camera.target.y = std::clamp<f32>(m_Camera.target.y, min.y, max.y);
+        m_Camera.target = Vector2Clamp(m_Camera.target, min, max);
     }
 
     void Viewport::OnRender() const
@@ -67,13 +64,9 @@ namespace maze
         Renderer::RenderText(TextFormat(" - Zoom: %.2f (Use +- to zoom)", m_Camera.zoom), 5, 275);
     }
 
-    void Viewport::OnResize()
+    void Viewport::OnResize(Vector2 mazeDimensions)
     {
-        m_Camera.offset =
-        {
-            (f32)(GetScreenWidth() / 2),
-            (f32)(GetScreenHeight() / 2)
-        };
+        m_Camera.offset = Vector2Scale(mazeDimensions, 0.5f);
         m_Camera.target = m_Camera.offset;
         m_Camera.zoom = MIN_ZOOM;
     }

@@ -25,7 +25,7 @@ namespace maze
         * 
         * \param target The point that the camera is looking at.
         */
-        Viewport(Vector2 target);
+        Viewport(Vector2 target, Vector2 offset);
 
         /*
         * \brief Destroys the viewport.
@@ -48,8 +48,10 @@ namespace maze
 
         /**
         * \brief Adjusts the camera when the window is resized.
+        * 
+        * \param mazeDimensions The width and height of the maze.
         */
-        void OnResize();
+        void OnResize(Vector2 mazeDimensions);
 
         /**
         * \brief Calls BeginMode2D()
