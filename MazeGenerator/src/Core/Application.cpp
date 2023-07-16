@@ -19,7 +19,8 @@ namespace maze
 {
 
 	Application::Application() :
-		m_Camera({ SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f })
+		m_Camera({ SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f },
+				 { SCREEN_WIDTH * 0.5f, SCREEN_HEIGHT * 0.5f })
 	{
 		SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
 
@@ -65,7 +66,6 @@ namespace maze
 		constexpr s32 gray		= 0x222222FF;
 		constexpr s32 lightGray = 0x333333FF;
 		constexpr s32 darkGray  = 0x111111FF;
-
 		constexpr s32 blue      = 0xFEFEFEFF;
 		constexpr s32 lightBlue = 0xFFFFFFFF;
 		constexpr s32 darkBlue  = 0xEEEEEEFF;
@@ -116,7 +116,13 @@ namespace maze
 		if (IsWindowResized())
 		{
 			ResetMaze();
-			m_Camera.OnResize();
+
+			Vector2 newDimensions =
+			{
+				(f32)m_Generator.GetWidth() * m_Generator.GetCellSize(),
+				(f32)m_Generator.GetHeight() * m_Generator.GetCellSize()
+			};
+			m_Camera.OnResize(newDimensions);
 		}
 
 		if (m_Generating)
@@ -138,24 +144,26 @@ namespace maze
 		Renderer::Begin();
 
 		m_Camera.Begin();
-			m_Generator.OnRender();
+		m_Generator.OnRender();
 		m_Camera.End();
 
 		OnGuiRender();
 		if (m_Debug)
 		{
+			const u16 total = m_Generator.GetWidth() * m_Generator.GetHeight();
+
+			const u32 screenWidth  = GetScreenWidth();
+			const u32 screenHeight = GetScreenHeight();
+			const u32 numVisited   = m_Generator.GetNumVisited();
+
+			const f32 percentage = m_Generator.GetPercentageFinish();
+
 			Renderer::DrawPerformanceMetrics();
+
 			Renderer::RenderText(TextFormat("Maze size: %dx%d", m_Generator.GetWidth(), m_Generator.GetHeight()), 5, 65);
 			Renderer::RenderText(TextFormat("Cell size: %d", m_Generator.GetCellSize()), 5, 95);
-
-			const u32 numVisited = m_Generator.GetNumVisited();
-			const u16 total		 = m_Generator.GetWidth() * m_Generator.GetHeight();
-			const f32 percentage = m_Generator.GetPercentageFinish();
 			Renderer::RenderText(TextFormat("Num. visited: %d/%d [%.2f%%]", numVisited, total, percentage), 5, 125);
 			Renderer::RenderText(TextFormat("Version: %s", MAZE_VERSION), 5, 155);
-
-			const u32 screenWidth = GetScreenWidth();
-			const u32 screenHeight = GetScreenHeight();
 			Renderer::RenderText(TextFormat("Dimensions: %hux%hu", screenWidth, screenHeight), 5, 185);
 
 			m_Camera.OnRender(); // Ends at y = 275.
@@ -174,8 +182,11 @@ namespace maze
 
 		// Play section.
 		{
-			constexpr f32 panelWidth = 515.0f;
-			constexpr f32 panelHeight = 90.0f;
+			constexpr f32 panelWidth   = 515.0f;
+			constexpr f32 panelHeight  = 90.0f;
+			constexpr f32 buttonWidth  = 250.0f;
+			constexpr f32 buttonHeight = 50.0f;
+
 			const Rectangle panel =
 			{
 				0.0f,
@@ -183,10 +194,9 @@ namespace maze
 				panelWidth,
 				panelHeight
 			};
+
 			GuiPanel(panel, "Play");
 
-			constexpr f32 buttonWidth = 250.0f;
-			constexpr f32 buttonHeight = 50.0f;
 			if (GuiButton({ 5.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, "Start"))
 				m_Generating = true;
 
@@ -196,10 +206,11 @@ namespace maze
 
 		// Size section.
 		{
-			u8 cellSize = m_Generator.GetCellSize();
+			constexpr f32 panelWidth   = 165.0f;
+			constexpr f32 panelHeight  = 90.0f;
+			constexpr f32 buttonWidth  = 50.0f;
+			constexpr f32 buttonHeight = 50.0f;
 
-			constexpr f32 panelWidth = 165.0f;
-			constexpr f32 panelHeight = 90.0f;
 			const Rectangle panel =
 			{
 				515.0f,
@@ -207,10 +218,11 @@ namespace maze
 				panelWidth,
 				panelHeight
 			};
+
+			u8 cellSize = m_Generator.GetCellSize();
+
 			GuiPanel(panel, "Cell Size [px]");
 
-			constexpr f32 buttonWidth  = 50.0f;
-			constexpr f32 buttonHeight = 50.0f;
 			if (GuiButton({ panel.x + 5.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, "<"))
 			{
 				cellSize = std::clamp<u8>(u8(cellSize >> 1), MIN_CELL_SIZE, MAX_CELL_SIZE);
@@ -231,10 +243,11 @@ namespace maze
 
 		// Speed
 		{
-			u8 cellSize = m_Generator.GetCellSize();
+			constexpr f32 panelWidth   = 155.0f;
+			constexpr f32 panelHeight  = 90.0f;
+			constexpr f32 buttonWidth  = 50.0f;
+			constexpr f32 buttonHeight = 50.0f;
 
-			constexpr f32 panelWidth = 155.0f;
-			constexpr f32 panelHeight = 90.0f;
 			const Rectangle panel =
 			{
 				680.0f,
@@ -242,10 +255,11 @@ namespace maze
 				panelWidth,
 				panelHeight
 			};
+
+			u8 cellSize = m_Generator.GetCellSize();
+
 			GuiPanel(panel, "Speed");
 
-			constexpr f32 buttonWidth = 50.0f;
-			constexpr f32 buttonHeight = 50.0f;
 			if (GuiButton({ panel.x + 5.0f, screenHeight - buttonHeight - 7, buttonWidth, buttonHeight }, "<"))
 			{
 				m_Speed >>= 1;
@@ -262,8 +276,11 @@ namespace maze
 
 		// Camera
 		{
-			constexpr f32 panelWidth = 155.0f;
+			constexpr f32 panelWidth  = 155.0f;
 			constexpr f32 panelHeight = 90.0f;
+			constexpr f32 boxWidth    = 50.0f;
+			constexpr f32 boxHeight   = 50.0f;
+
 			const Rectangle panel =
 			{
 				835.0f,
@@ -271,11 +288,9 @@ namespace maze
 				panelWidth,
 				panelHeight
 			};
-			GuiPanel(panel, "Camera");
-
-			constexpr f32 boxWidth = 50.0f;
-			constexpr f32 boxHeight = 50.0f;
 			const Rectangle button = { panel.x + 5.0f, screenHeight - boxHeight - 7, boxWidth, boxHeight };
+
+			GuiPanel(panel, "Camera");
 
 			m_Follow = GuiCheckBox(button, "Follow  ", m_Follow);
 		}
@@ -284,8 +299,9 @@ namespace maze
 	void Application::ResetMaze()
 	{
 		const u8 cellSize = m_Generator.GetCellSize();
-		const u16 width   = m_Generator.GetWidth();
-		const u16 height  = m_Generator.GetHeight();
+
+		const u16 width  = m_Generator.GetWidth();
+		const u16 height = m_Generator.GetHeight();
 
 		m_Generator = MazeGenerator::Create(cellSize, width, height);
 

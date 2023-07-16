@@ -32,7 +32,7 @@ namespace maze
 		*/
 		void Run();
 
-	public:
+	private:
 		/**
 		* \brief Initializes all UI components of the application.
 		*/

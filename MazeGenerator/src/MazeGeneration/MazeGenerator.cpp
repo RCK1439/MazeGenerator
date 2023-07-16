@@ -77,7 +77,7 @@ namespace maze
 
 	void MazeGenerator::OnRender() const
 	{
-		for (const Cell& cell : m_Cells)
+		for (Cell cell : m_Cells)
 			cell.OnRender(m_CellSize);
 	}
 
@@ -89,8 +89,11 @@ namespace maze
 
 	void MazeGenerator::ReconstructCellGrid()
 	{
-		m_Width  = GetScreenWidth() / m_CellSize;
-		m_Height = GetScreenHeight() / m_CellSize;
+		const s32 screenWidth  = GetScreenWidth();
+		const s32 screenHeight = GetScreenHeight();
+
+		m_Width  = (screenWidth / m_CellSize) + (screenWidth % m_CellSize > 0);
+		m_Height = (screenHeight / m_CellSize) + (screenHeight % m_CellSize > 0);
 
 		m_Cells.reserve(m_Width * m_Height);
 

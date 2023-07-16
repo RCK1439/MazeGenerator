@@ -6,9 +6,9 @@
 #pragma once
 
 #if defined(MG_DEBUG)
-	#include <stdio.h>
+#	include <stdio.h>
 
-	#define LOG(...) printf("[DEBUG]: MAZE GENERATOR: "); printf(__VA_ARGS__)
+#	define LOG(...) printf("[DEBUG]: MAZE GENERATOR: "); printf(__VA_ARGS__)
 #elif defined(MG_RELEASE)
-	#define LOG(...)
+#   define LOG(...)
 #endif
