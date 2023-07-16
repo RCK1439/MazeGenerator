@@ -64,9 +64,9 @@ namespace maze
         Renderer::RenderText(TextFormat(" - Zoom: %.2f (Use +- to zoom)", m_Camera.zoom), 5, 275);
     }
 
-    void Viewport::OnResize(Vector2 mazeDimensions)
+    void Viewport::OnResize()
     {
-        m_Camera.offset = Vector2Scale(mazeDimensions, 0.5f);
+        m_Camera.offset = { GetScreenWidth() * 0.5f, GetScreenHeight() * 0.5f };
         m_Camera.target = m_Camera.offset;
         m_Camera.zoom = MIN_ZOOM;
     }

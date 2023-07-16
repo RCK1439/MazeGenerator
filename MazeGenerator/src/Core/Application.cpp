@@ -116,13 +116,7 @@ namespace maze
 		if (IsWindowResized())
 		{
 			ResetMaze();
-
-			Vector2 newDimensions =
-			{
-				(f32)m_Generator.GetWidth() * m_Generator.GetCellSize(),
-				(f32)m_Generator.GetHeight() * m_Generator.GetCellSize()
-			};
-			m_Camera.OnResize(newDimensions);
+			m_Camera.OnResize();
 		}
 
 		if (m_Generating)

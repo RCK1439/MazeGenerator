@@ -48,10 +48,8 @@ namespace maze
 
         /**
         * \brief Adjusts the camera when the window is resized.
-        * 
-        * \param mazeDimensions The width and height of the maze.
         */
-        void OnResize(Vector2 mazeDimensions);
+        void OnResize();
 
         /**
         * \brief Calls BeginMode2D()
