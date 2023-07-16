@@ -172,12 +172,16 @@ namespace maze
 
 	private:
 		u8 m_CellSize = 16;
-		u16 m_Width, m_Height;
-		u16 m_CurrentX = 0, m_CurrentY = 0;
 
-		std::vector<Cell> m_Cells;
-		std::stack<Cell> m_Path;
+		u16 m_Width;
+		u16 m_Height;
+		u16 m_CurrentX = 0;
+		u16 m_CurrentY = 0;
 
 		u32 m_NumVisited = 0;
+
+		std::vector<Cell> m_Cells;
+
+		std::stack<Cell> m_Path;
 	};
 }

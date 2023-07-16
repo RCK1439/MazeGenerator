@@ -63,16 +63,16 @@ namespace maze
 		void ResetMaze();
 
 	private:
-		bool m_IsRunning = true;
-		bool m_Debug = false;
-
+		bool m_IsRunning  = true;
+		bool m_Debug	  = false;
 		bool m_Generating = false;
-		MazeGenerator m_Generator;
+		bool m_HideGUI	  = false;
+		bool m_Follow	  = false;
 
 		u8 m_Speed = 1;
-		bool m_HideGUI = false;
+
+		MazeGenerator m_Generator;
 
 		Viewport m_Camera;
-		bool m_Follow = false;
 	};
 }
