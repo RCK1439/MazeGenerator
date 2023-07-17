@@ -129,23 +129,6 @@ namespace maze
 
 		return neighbours;
 	}
-
-	void MazeGenerator::OpenWallBetween(Cell& a, Cell& b)
-	{
-		const s8 xDir = b.x - a.x;
-		const s8 yDir = b.y - a.y;
-
-		if (xDir != 0)
-		{
-			a.CellState |= (xDir < 0 ? Cell::WEST_BIT : Cell::EAST_BIT);
-			b.CellState |= (xDir < 0 ? Cell::EAST_BIT : Cell::WEST_BIT);
-		}
-		else if (yDir != 0)
-		{
-			a.CellState |= (yDir < 0 ? Cell::NORTH_BIT : Cell::SOUTH_BIT);
-			b.CellState |= (yDir < 0 ? Cell::SOUTH_BIT : Cell::NORTH_BIT);
-		}
-	}
 }
 
 #pragma warning(pop)	// MSVC Warning C28020

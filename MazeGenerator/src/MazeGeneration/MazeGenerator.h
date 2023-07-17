@@ -168,7 +168,22 @@ namespace maze
 		* \param a:	The first cell.
 		* \param b:	The second cell.
 		*/
-		void OpenWallBetween(Cell& a, Cell& b);
+		inline void OpenWallBetween(Cell& a, Cell& b)
+		{
+			const s8 xDir = b.x - a.x;
+			const s8 yDir = b.y - a.y;
+
+			const s8 xlt = xDir < 0;
+			const s8 ylt = yDir < 0;
+			const s8 xgt = xDir > 0;
+			const s8 ygt = yDir > 0;
+
+			a.CellState |= xlt * Cell::WEST_BIT + xgt * Cell::EAST_BIT;
+			a.CellState |= ylt * Cell::NORTH_BIT + ygt * Cell::SOUTH_BIT;
+
+			b.CellState |= xlt * Cell::EAST_BIT + xgt * Cell::WEST_BIT;
+			b.CellState |= ylt * Cell::SOUTH_BIT + ygt * Cell::NORTH_BIT;
+		}
 
 	private:
 		u8 m_CellSize = 16;
