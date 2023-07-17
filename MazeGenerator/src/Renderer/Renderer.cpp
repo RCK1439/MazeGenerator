@@ -5,6 +5,7 @@
 
 #include "Renderer.h"
 
+#include <external/glad.h>
 #include <array>
 
 namespace maze
@@ -82,12 +83,18 @@ namespace maze
 
     void Renderer::DrawPerformanceMetrics()
     {
+        const s32 screenWidth = GetScreenWidth();
+        const s32 screenHeight = GetScreenHeight();
         const s32 fps = GetFPS();
 
         const f32 ft = GetFrameTime() * 1000.0f;
 
-        RenderText(TextFormat("%d FPS", fps), 5, 5, WHITE);
-        RenderText(TextFormat("%.2fms", ft), 5, 35, WHITE);
+        const char* gpu = (const char*)glGetString(GL_RENDERER);
+
+        RenderText(TextFormat("%d FPS", fps), 5, 5);
+        RenderText(TextFormat("%.2fms", ft), 5, 35);
+        RenderText(TextFormat("Dimensions: %hux%hu", screenWidth, screenHeight), 5, 65);
+        RenderText(gpu, 5, 95);
     }
 
     void Renderer::RenderText(std::string_view text, u16 x, u16 y, Color color)

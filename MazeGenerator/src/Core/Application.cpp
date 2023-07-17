@@ -144,23 +144,18 @@ namespace maze
         OnGuiRender();
         if (m_Debug)
         {
-            const u16 total = m_Generator.GetWidth() * m_Generator.GetHeight();
-
-            const u32 screenWidth  = GetScreenWidth();
-            const u32 screenHeight = GetScreenHeight();
-            const u32 numVisited   = m_Generator.GetNumVisited();
-
+            const u16 total      = m_Generator.GetWidth() * m_Generator.GetHeight();
+            const u32 numVisited = m_Generator.GetNumVisited();
             const f32 percentage = m_Generator.GetPercentageFinish();
 
-            Renderer::DrawPerformanceMetrics();
+            Renderer::DrawPerformanceMetrics(); // Ends at y = 95.
 
-            Renderer::RenderText(TextFormat("Maze size: %dx%d", m_Generator.GetWidth(), m_Generator.GetHeight()), 5, 65);
-            Renderer::RenderText(TextFormat("Cell size: %d", m_Generator.GetCellSize()), 5, 95);
-            Renderer::RenderText(TextFormat("Num. visited: %d/%d [%.2f%%]", numVisited, total, percentage), 5, 125);
-            Renderer::RenderText(TextFormat("Version: %s", MAZE_VERSION), 5, 155);
-            Renderer::RenderText(TextFormat("Dimensions: %hux%hu", screenWidth, screenHeight), 5, 185);
+            Renderer::RenderText(TextFormat("Maze size: %dx%d", m_Generator.GetWidth(), m_Generator.GetHeight()), 5, 125);
+            Renderer::RenderText(TextFormat("Cell size: %d", m_Generator.GetCellSize()), 5, 155);
+            Renderer::RenderText(TextFormat("Num. visited: %d/%d [%.2f%%]", numVisited, total, percentage), 5, 185);
+            Renderer::RenderText(TextFormat("Version: %s", MAZE_VERSION), 5, 215);
 
-            m_Camera.OnRender(); // Ends at y = 275.
+            m_Camera.OnRender(); // Ends at y = 305.
         }
 
         Renderer::End();

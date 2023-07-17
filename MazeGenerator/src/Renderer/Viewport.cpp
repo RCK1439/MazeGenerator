@@ -60,9 +60,9 @@ namespace maze
 
     void Viewport::OnRender() const
     {
-        Renderer::RenderText("Camera: ", 5, 215);
-        Renderer::RenderText(TextFormat(" - Target: %.2f, %.2f (Use WASD to move)", m_Camera.target.x, m_Camera.target.y), 5, 245);
-        Renderer::RenderText(TextFormat(" - Zoom: %.2f (Use +- to zoom)", m_Camera.zoom), 5, 275);
+        Renderer::RenderText("Camera: ", 5, 245);
+        Renderer::RenderText(TextFormat(" - Target: %.2f, %.2f (Use WASD to move)", m_Camera.target.x, m_Camera.target.y), 5, 275);
+        Renderer::RenderText(TextFormat(" - Zoom: %.2f (Use +- to zoom)", m_Camera.zoom), 5, 305);
     }
 
     void Viewport::OnResize()
