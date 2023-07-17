@@ -13,7 +13,7 @@ namespace maze
 {
     /**
     * \brief This class represents the viewport into the maze.
-    * 
+    *
     * It's basically a camera that allows the user to look, move and
     * zoom into the maze.
     */
@@ -22,7 +22,7 @@ namespace maze
     public:
         /**
         * \brief Constructs the viewport with a target
-        * 
+        *
         * \param target The point that the camera is looking at.
         */
         Viewport(Vector2 target, Vector2 offset);
@@ -34,7 +34,7 @@ namespace maze
 
         /**
         * \brief Called once per frame to update the camera.
-        * 
+        *
         * \param dt       The time elapsed since the previous frame.
         * \param position The position that the generator is currently at.
         * \param follow   Flag determining whether the camera should follow the position or not.
@@ -57,7 +57,7 @@ namespace maze
         void Begin();
 
         /**
-        * \brief Calles EndMode2D() 
+        * \brief Calles EndMode2D()
         */
         void End();
 

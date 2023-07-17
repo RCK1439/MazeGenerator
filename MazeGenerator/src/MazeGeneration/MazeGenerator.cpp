@@ -16,119 +16,119 @@
 namespace maze
 {
 
-	MazeGenerator::MazeGenerator()
-	{
-		ReconstructCellGrid();
-	}
+    MazeGenerator::MazeGenerator()
+    {
+        ReconstructCellGrid();
+    }
 
-	MazeGenerator::MazeGenerator(u8 cellSize, u16 width, u16 height) :
-		m_CellSize(cellSize), m_Width(width), m_Height(height)
-	{
-		ReconstructCellGrid();
-	}
+    MazeGenerator::MazeGenerator(u8 cellSize, u16 width, u16 height) :
+        m_CellSize(cellSize), m_Width(width), m_Height(height)
+    {
+        ReconstructCellGrid();
+    }
 
-	void MazeGenerator::OnUpdate()
-	{
-		Cell& current = m_Cells[m_CurrentX + m_CurrentY * m_Width];
-		if (!current.IsVisited())
-		{
-			current.Visit();
-			m_NumVisited++;
-		}
+    void MazeGenerator::OnUpdate()
+    {
+        Cell& current = m_Cells[m_CurrentX + m_CurrentY * m_Width];
+        if (!current.IsVisited())
+        {
+            current.Visit();
+            m_NumVisited++;
+        }
 
-		if (IsFinish())
-			return;
+        if (IsFinish())
+            return;
 
-		LOG("Current: [%3hu, %3hu]\r", m_CurrentX, m_CurrentY);
+        LOG("Current: [%3hu, %3hu]\r", m_CurrentX, m_CurrentY);
 
-		std::array<Cell*, 4> validNeighbours = GetValidNeighbours(m_CurrentX, m_CurrentY);
-		if (!validNeighbours[0] && !validNeighbours[1] && !validNeighbours[2] && !validNeighbours[3])
-		{
-			while (!m_Path.empty())
-			{
-				const Cell& cell = m_Path.top();
+        std::array<Cell*, 4> validNeighbours = GetValidNeighbours(m_CurrentX, m_CurrentY);
+        if (!validNeighbours[0] && !validNeighbours[1] && !validNeighbours[2] && !validNeighbours[3])
+        {
+            while (!m_Path.empty())
+            {
+                const Cell& cell = m_Path.top();
 
-				const u8 sX = cell.x;
-				const u8 sY = cell.y;
+                const u8 sX = cell.x;
+                const u8 sY = cell.y;
 
-				if (HasValidNeighbour(sX, sY))
-				{
-					m_CurrentX = sX;
-					m_CurrentY = sY;
-					return;
-				}
+                if (HasValidNeighbour(sX, sY))
+                {
+                    m_CurrentX = sX;
+                    m_CurrentY = sY;
+                    return;
+                }
 
-				m_Path.pop();
-			}
-		}
+                m_Path.pop();
+            }
+        }
 
-		size_t index;
-		do
-		{
-			index = (size_t)GetRandomValue(0, 3);
-		} while (!validNeighbours[index]);
+        size_t index;
+        do
+        {
+            index = (size_t)GetRandomValue(0, 3);
+        } while (!validNeighbours[index]);
 
-		OpenWallBetween(current, *validNeighbours[index]);
-		m_Path.push(current);
+        OpenWallBetween(current, *validNeighbours[index]);
+        m_Path.push(current);
 
-		m_CurrentX = validNeighbours[index]->x;
-		m_CurrentY = validNeighbours[index]->y;
-	}
+        m_CurrentX = validNeighbours[index]->x;
+        m_CurrentY = validNeighbours[index]->y;
+    }
 
-	void MazeGenerator::OnRender() const
-	{
-		for (Cell cell : m_Cells)
-			cell.OnRender(m_CellSize);
-	}
+    void MazeGenerator::OnRender() const
+    {
+        for (Cell cell : m_Cells)
+            cell.OnRender(m_CellSize);
+    }
 
-	void MazeGenerator::SetCellSize(u8 cellSize)
-	{
-		m_CellSize = cellSize;
-		ReconstructCellGrid();
-	}
+    void MazeGenerator::SetCellSize(u8 cellSize)
+    {
+        m_CellSize = cellSize;
+        ReconstructCellGrid();
+    }
 
-	void MazeGenerator::ReconstructCellGrid()
-	{
-		const s32 screenWidth  = GetScreenWidth();
-		const s32 screenHeight = GetScreenHeight();
+    void MazeGenerator::ReconstructCellGrid()
+    {
+        const s32 screenWidth  = GetScreenWidth();
+        const s32 screenHeight = GetScreenHeight();
 
-		m_Width  = (screenWidth / m_CellSize) + (screenWidth % m_CellSize > 0);
-		m_Height = (screenHeight / m_CellSize) + (screenHeight % m_CellSize > 0);
+        m_Width  = (screenWidth / m_CellSize) + (screenWidth % m_CellSize > 0);
+        m_Height = (screenHeight / m_CellSize) + (screenHeight % m_CellSize > 0);
 
-		m_Cells.reserve(m_Width * m_Height);
+        m_Cells.reserve(m_Width * m_Height);
 
-		for (u8 y = 0; y < m_Height; y++)
-			for (u8 x = 0; x < m_Width; x++)
-				m_Cells.emplace_back(x, y);
-	}
+        for (u8 y = 0; y < m_Height; y++)
+            for (u8 x = 0; x < m_Width; x++)
+                m_Cells.emplace_back(x, y);
+    }
 
-	bool MazeGenerator::IsValidNeighbour(u16 x, u16 y)
-	{
-		if (x >= m_Width || y >= m_Height)
-			return false;
+    bool MazeGenerator::IsValidNeighbour(u16 x, u16 y)
+    {
+        if (x >= m_Width || y >= m_Height)
+            return false;
 
-		return !m_Cells[x + y * m_Width].IsVisited();
-	}
+        return !m_Cells[x + y * m_Width].IsVisited();
+    }
 
-	bool MazeGenerator::HasValidNeighbour(u16 x, u16 y)
-	{
-		return IsValidNeighbour(x, y - 1) ||
-			   IsValidNeighbour(x + 1, y) ||
-			   IsValidNeighbour(x, y + 1) ||
-			   IsValidNeighbour(x + 1, y);
-	}
+    bool MazeGenerator::HasValidNeighbour(u16 x, u16 y)
+    {
+        return IsValidNeighbour(x, y - 1) ||
+               IsValidNeighbour(x + 1, y) ||
+               IsValidNeighbour(x, y + 1) ||
+               IsValidNeighbour(x + 1, y);
+    }
 
-	std::array<Cell*, 4> MazeGenerator::GetValidNeighbours(u16 x, u16 y)
-	{
-		std::array<Cell*, 4> neighbours = { nullptr, nullptr, nullptr, nullptr };
+    std::array<Cell*, 4> MazeGenerator::GetValidNeighbours(u16 x, u16 y)
+    {
+        std::array<Cell*, 4> neighbours = { nullptr, nullptr, nullptr, nullptr };
 
-		if (IsValidNeighbour(x, y - 1)) neighbours[0] = &m_Cells[x + (y - 1) * m_Width];
-		if (IsValidNeighbour(x + 1, y)) neighbours[1] = &m_Cells[(x + 1) + y * m_Width];
-		if (IsValidNeighbour(x, y + 1)) neighbours[2] = &m_Cells[x + (y + 1) * m_Width];
-		if (IsValidNeighbour(x - 1, y)) neighbours[3] = &m_Cells[(x - 1) + y * m_Width];
+        if (IsValidNeighbour(x, y - 1)) neighbours[0] = &m_Cells[x + (y - 1) * m_Width];
+        if (IsValidNeighbour(x + 1, y)) neighbours[1] = &m_Cells[(x + 1) + y * m_Width];
+        if (IsValidNeighbour(x, y + 1)) neighbours[2] = &m_Cells[x + (y + 1) * m_Width];
+        if (IsValidNeighbour(x - 1, y)) neighbours[3] = &m_Cells[(x - 1) + y * m_Width];
 
-		return neighbours;
-	}
+        return neighbours;
+    }
 }
 
 #pragma warning(pop)	// MSVC Warning C28020

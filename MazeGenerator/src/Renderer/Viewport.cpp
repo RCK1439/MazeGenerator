@@ -40,11 +40,12 @@ namespace maze
             constexpr f32 MIN_EFFECT_LENGTH = 10;
 
             const Vector2 diff = Vector2Subtract(position, m_Camera.target);
-            const f32 length = Vector2Length(diff);
 
+            const f32 length = Vector2Length(diff);
             if (length > MIN_EFFECT_LENGTH)
             {
                 const f32 speed = std::max<f32>(length, MIN_SPEED);
+
                 m_Camera.target = Vector2Add(m_Camera.target, Vector2Scale(diff, speed * dt / length));
             }
         }
