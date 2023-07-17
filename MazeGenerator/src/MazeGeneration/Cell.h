@@ -21,7 +21,7 @@ namespace maze
 		static constexpr u8 WEST_BIT  = 0x1;
 
 		u8 x, y;
-		u8 CellState = 0;
+		u8 CellState = 0x00;
 
 	public:
 		/**
@@ -42,7 +42,7 @@ namespace maze
 		* 
 		* \return true, if the cell has been visited.
 		*/
-		inline constexpr bool IsVisited() const { return CellState & 0x10; }
+		inline bool IsVisited() const { return CellState & 0x10; }
 
 		/**
 		* \brief Marks the cell as visited.
