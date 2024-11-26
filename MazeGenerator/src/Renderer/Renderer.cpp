@@ -1,28 +1,20 @@
-/*
-* Ruan C. Keet (2022)
-* Renderer.cpp
-*/
-
 #include "Renderer.h"
 
 #include <external/glad.h>
+#include <raymath.h>
 #include <array>
 
 namespace maze
 {
     static constexpr size_t NUM_TILES = 16;
+    static constexpr int32_t FONT_SIZE = 24;
 
-    static constexpr s32 FONT_SIZE = 24;
-
-    /**
-    * \brief Data to be used by the renderer.
-    */
     struct RendererData
     {
-        Texture2D tileSheet;
-        u32 tileSize;
+        Texture2D                        tileSheet;
+        uint32_t                         tileSize;
         std::array<Rectangle, NUM_TILES> tiles;
-        Font font;
+        Font                             font;
     };
 
     static RendererData s_Data;
@@ -31,19 +23,19 @@ namespace maze
     {
         s_Data.tileSheet = LoadTexture("res/textures/tiles.png");
 
-        const u32 width  = s_Data.tileSheet.width;
-        const u32 height = s_Data.tileSheet.height;
+        const uint32_t width = static_cast<uint32_t>(s_Data.tileSheet.width);
+        const uint32_t height = static_cast<uint32_t>(s_Data.tileSheet.height);
 
         s_Data.tileSize = height;
 
-        for (u32 i = 0; i < NUM_TILES; ++i)
+        for (size_t i = 0; i < NUM_TILES; ++i)
         {
-            s_Data.tiles[i] =
+            s_Data.tiles[i] = Rectangle
             {
-                (f32)(i * s_Data.tileSize),
+                static_cast<float>(i * s_Data.tileSize),
                 0.0f,
-                (f32)(s_Data.tileSize),
-                (f32)(s_Data.tileSize)
+                static_cast<float>(s_Data.tileSize),
+                static_cast<float>(s_Data.tileSize)
             };
         }
 
@@ -53,6 +45,7 @@ namespace maze
     void Renderer::Shutdown()
     {
         UnloadTexture(s_Data.tileSheet);
+        UnloadFont(s_Data.font);
     }
 
     void Renderer::Begin()
@@ -65,31 +58,31 @@ namespace maze
     {
         EndDrawing();
     }
-
-    void Renderer::DrawTile(u8 tileID, u16 x, u16 y, u16 cellSize)
+    
+    void Renderer::DrawTile(uint8_t tileID, uint16_t x, uint16_t y, uint16_t cellSize)
     {
-        const f32 scale = ((f32)cellSize / (f32)s_Data.tileSize);
+        const float scale = static_cast<float>(cellSize) / static_cast<float>(s_Data.tileSize);
 
         const Rectangle dest =
         {
-            (f32)x,
-            (f32)y,
-            s_Data.tileSize * scale,
-            s_Data.tileSize * scale
+            static_cast<float>(x),
+            static_cast<float>(y),
+            static_cast<float>(s_Data.tileSize) * scale,
+            static_cast<float>(s_Data.tileSize) * scale
         };
 
-        DrawTexturePro(s_Data.tileSheet, s_Data.tiles[tileID & 0x0F], dest, { 0 }, 0.0f, WHITE);
+        DrawTexturePro(s_Data.tileSheet, s_Data.tiles[tileID & 0x0F], dest, Vector2Zero(), 0.0f, WHITE);
     }
 
     void Renderer::DrawPerformanceMetrics()
     {
-        const s32 screenWidth = GetScreenWidth();
-        const s32 screenHeight = GetScreenHeight();
-        const s32 fps = GetFPS();
+        const int32_t screenWidth = GetScreenWidth();
+        const int32_t screenHeight = GetScreenHeight();
+        const int32_t fps = GetFPS();
 
-        const f32 ft = GetFrameTime() * 1000.0f;
+        const float ft = GetFrameTime() * 1000.0f;
 
-        const char* gpu = (const char*)glGetString(GL_RENDERER);
+        const char* gpu = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
 
         RenderText(TextFormat("%d FPS", fps), 5, 5);
         RenderText(TextFormat("%.2fms", ft), 5, 35);
@@ -97,17 +90,27 @@ namespace maze
         RenderText(gpu, 5, 95);
     }
 
-    void Renderer::RenderText(std::string_view text, u16 x, u16 y, Color color)
+    void Renderer::RenderText(std::string_view text, uint16_t x, uint16_t y, Color color)
     {
-        constexpr Color borderColor = { 0, 0, 0, 64 };
+        constexpr Color BORDER_COLOR = Color { 0, 0, 0, 64 };
 
         const Vector2 dimensions = MeasureTextEx(s_Data.font, text.data(), FONT_SIZE, 2);
-        const Vector2 position   = { (f32)x, (f32)y };
+        const Vector2 position = Vector2
+        {
+            static_cast<float>(x),
+            static_cast<float>(y)
+        };
 
-        const Rectangle border = { position.x, position.y, dimensions.x, dimensions.y };
+        const Rectangle border = Rectangle
+        {
+            position.x,
+            position.y,
+            dimensions.x,
+            dimensions.y
+        };
 
-        DrawRectangleRec(border, borderColor);
-        DrawTextPro(s_Data.font, text.data(), { (f32)x, (f32)y }, { 0 }, 0.0f, (f32)FONT_SIZE, 2, color);
+        DrawRectangleRec(border, BORDER_COLOR);
+        DrawTextPro(s_Data.font, text.data(), position, Vector2Zero(), 0.0f, static_cast<float>(FONT_SIZE), 2.0f, color);
     }
 
     const Font& Renderer::GetFont()

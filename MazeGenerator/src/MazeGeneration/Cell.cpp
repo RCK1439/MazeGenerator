@@ -1,16 +1,11 @@
-/*
-* Ruan C. Keet (2022)
-* Cell.cpp
-*/
-
 #include "Cell.h"
 
 #include "Renderer/Renderer.h"
 
 namespace maze
 {
-    void Cell::OnRender(u8 cellSize) const
+    void Cell::OnRender(uint8_t cellSize) const
     {
-        Renderer::DrawTile(CellState, x * cellSize, y * cellSize, cellSize);
+        Renderer::DrawTile(state, x * static_cast<uint16_t>(cellSize), y * static_cast<uint16_t>(cellSize), static_cast<uint16_t>(cellSize));
     }
 }

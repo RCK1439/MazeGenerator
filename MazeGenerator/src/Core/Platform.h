@@ -1,8 +1,3 @@
-/*
-* Ruan C. Keet (2022)
-* Platform.h
-*/
-
 #pragma once
 
 #if defined(_WIN32)

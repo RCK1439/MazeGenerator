@@ -8,9 +8,6 @@
 
 #include "MazeGenerator.h"
 
-#include "Core/Log.h"
-#include "Core/Types.h"
-
 #include <raylib.h>
 
 namespace maze
@@ -21,7 +18,7 @@ namespace maze
         ReconstructCellGrid();
     }
 
-    MazeGenerator::MazeGenerator(u8 cellSize, u16 width, u16 height) :
+    MazeGenerator::MazeGenerator(uint8_t cellSize, uint16_t width, uint16_t height) :
         m_CellSize(cellSize), m_Width(width), m_Height(height)
     {
         ReconstructCellGrid();
@@ -29,7 +26,8 @@ namespace maze
 
     void MazeGenerator::OnUpdate()
     {
-        Cell& current = m_Cells[m_CurrentX + m_CurrentY * m_Width];
+        const size_t idx = static_cast<size_t>(m_CurrentX + m_CurrentY * m_Width);
+        Cell& current = m_Cells[idx];
         if (!current.IsVisited())
         {
             current.Visit();
@@ -37,9 +35,9 @@ namespace maze
         }
 
         if (IsFinish())
+        {
             return;
-
-        LOG("Current: [%3hu, %3hu]\r", m_CurrentX, m_CurrentY);
+        }
 
         std::array<Cell*, 4> validNeighbours = GetValidNeighbours(m_CurrentX, m_CurrentY);
         if (!validNeighbours[0] && !validNeighbours[1] && !validNeighbours[2] && !validNeighbours[3])
@@ -48,8 +46,8 @@ namespace maze
             {
                 const Cell& cell = m_Path.top();
 
-                const u8 sX = cell.x;
-                const u8 sY = cell.y;
+                const uint8_t sX = cell.x;
+                const uint8_t sY = cell.y;
 
                 if (HasValidNeighbour(sX, sY))
                 {
@@ -65,7 +63,7 @@ namespace maze
         size_t index;
         do
         {
-            index = (size_t)GetRandomValue(0, 3);
+            index = static_cast<size_t>(GetRandomValue(0, 3));
         } while (!validNeighbours[index]);
 
         OpenWallBetween(current, *validNeighbours[index]);
@@ -77,11 +75,13 @@ namespace maze
 
     void MazeGenerator::OnRender() const
     {
-        for (Cell cell : m_Cells)
+        for (const Cell& cell : m_Cells)
+        {
             cell.OnRender(m_CellSize);
+        }
     }
 
-    void MazeGenerator::SetCellSize(u8 cellSize)
+    void MazeGenerator::SetCellSize(uint8_t cellSize)
     {
         m_CellSize = cellSize;
         ReconstructCellGrid();
@@ -89,28 +89,36 @@ namespace maze
 
     void MazeGenerator::ReconstructCellGrid()
     {
-        const s32 screenWidth  = GetScreenWidth();
-        const s32 screenHeight = GetScreenHeight();
+        const int32_t screenWidth = GetScreenWidth();
+        const int32_t screenHeight = GetScreenHeight();
 
-        m_Width  = (screenWidth / m_CellSize) + (screenWidth % m_CellSize > 0);
-        m_Height = (screenHeight / m_CellSize) + (screenHeight % m_CellSize > 0);
+        m_Width  = static_cast<uint16_t>(screenWidth / m_CellSize) + static_cast<uint16_t>(screenWidth % m_CellSize > 0);
+        m_Height = static_cast<uint16_t>(screenHeight / m_CellSize) + static_cast<uint16_t>(screenHeight % m_CellSize > 0);
 
-        m_Cells.reserve(m_Width * m_Height);
+        const size_t size = static_cast<size_t>(m_Width) * static_cast<size_t>(m_Height);
+        m_Cells.reserve(size);
 
-        for (u8 y = 0; y < m_Height; y++)
-            for (u8 x = 0; x < m_Width; x++)
+        for (uint8_t y = 0; y < m_Height; y++)
+        {
+            for (uint8_t x = 0; x < m_Width; x++)
+            {
                 m_Cells.emplace_back(x, y);
+            }
+        }
     }
 
-    bool MazeGenerator::IsValidNeighbour(u16 x, u16 y)
+    bool MazeGenerator::IsValidNeighbour(uint16_t x, uint16_t y) const
     {
         if (x >= m_Width || y >= m_Height)
+        {
             return false;
+        }
 
-        return !m_Cells[x + y * m_Width].IsVisited();
+        const size_t idx = static_cast<size_t>(x + y * m_Width);
+        return !m_Cells[idx].IsVisited();
     }
 
-    bool MazeGenerator::HasValidNeighbour(u16 x, u16 y)
+    bool MazeGenerator::HasValidNeighbour(uint16_t x, uint16_t y) const
     {
         return IsValidNeighbour(x, y - 1) ||
                IsValidNeighbour(x + 1, y) ||
@@ -118,14 +126,14 @@ namespace maze
                IsValidNeighbour(x + 1, y);
     }
 
-    std::array<Cell*, 4> MazeGenerator::GetValidNeighbours(u16 x, u16 y)
+    std::array<Cell*, 4> MazeGenerator::GetValidNeighbours(uint16_t x, uint16_t y)
     {
         std::array<Cell*, 4> neighbours = { nullptr, nullptr, nullptr, nullptr };
 
-        if (IsValidNeighbour(x, y - 1)) neighbours[0] = &m_Cells[x + (y - 1) * m_Width];
-        if (IsValidNeighbour(x + 1, y)) neighbours[1] = &m_Cells[(x + 1) + y * m_Width];
-        if (IsValidNeighbour(x, y + 1)) neighbours[2] = &m_Cells[x + (y + 1) * m_Width];
-        if (IsValidNeighbour(x - 1, y)) neighbours[3] = &m_Cells[(x - 1) + y * m_Width];
+        if (IsValidNeighbour(x, y - 1)) neighbours[0] = &m_Cells[static_cast<size_t>(x + (y - 1) * m_Width)];
+        if (IsValidNeighbour(x + 1, y)) neighbours[1] = &m_Cells[static_cast<size_t>((x + 1) + y * m_Width)];
+        if (IsValidNeighbour(x, y + 1)) neighbours[2] = &m_Cells[static_cast<size_t>(x + (y + 1) * m_Width)];
+        if (IsValidNeighbour(x - 1, y)) neighbours[3] = &m_Cells[static_cast<size_t>((x - 1) + y * m_Width)];
 
         return neighbours;
     }
